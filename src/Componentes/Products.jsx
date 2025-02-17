@@ -1,6 +1,8 @@
+// Products.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../firebase';
 import '../styles/Products.css';
 
 const Products = ({ addToCart }) => {
@@ -8,13 +10,20 @@ const Products = ({ addToCart }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('https://fakestoreapi.com/products')
-      .then(response => {
-        setProducts(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data: ', error);
-      });
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const productsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productsData);
+      } catch (error) {
+        console.error("Error fetching products: ", error);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const handleViewMore = (product) => {
@@ -25,14 +34,14 @@ const Products = ({ addToCart }) => {
     <div className="container">
       <h1 className="header">Productos</h1>
       <ul className="product-list">
-        {products.map(product => (
+        {products.map((product) => (
           <li key={product.id} className="product-item">
             <img
               src={product.image}
-              alt={product.title}
+              alt={product.name}
               className="product-image"
             />
-            <h2 className="product-title">{product.title}</h2>
+            <h2 className="product-title">{product.name}</h2>
             <p className="product-description">
               {product.description.length > 100
                 ? `${product.description.slice(0, 100)}...`

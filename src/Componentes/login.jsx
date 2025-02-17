@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"; 
-import { auth } from '../firebase'; 
-import '../styles/login.css'; 
+import { useNavigate, Link } from 'react-router-dom';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore"; // Importa Firestore
+import { auth, db } from '../firebase'; // Asegúrate de exportar db desde firebase.js
+import '../styles/login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user); 
+        setUser(user);
       } else {
-        setUser(null); 
+        setUser(null);
       }
-      setLoading(false); 
+      setLoading(false);
     });
 
-    return () => unsubscribe(); 
+    return () => unsubscribe();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -32,9 +31,19 @@ const Login = () => {
     setError('');
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/home'); // Redirige a /home después de un inicio de sesión exitoso
+      // 1. Iniciar sesión con Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 2. Verificar si el usuario es un administrador
+      const adminDoc = await getDoc(doc(db, "admins", user.email)); // Busca el documento en la colección "admins"
+      if (adminDoc.exists()) {
+        navigate('/admin'); // Redirige al panel de administrador
+      } else {
+        navigate('/home'); // Redirige a la página principal
+      }
     } catch (error) {
+      // Manejo de errores
       switch (error.code) {
         case 'auth/user-not-found':
           setError('El correo electrónico no está registrado.');
@@ -46,7 +55,7 @@ const Login = () => {
           setError('El correo electrónico no es válido.');
           break;
         default:
-          setError('El correo o contraseña son incorrectos, verificalos e intenta de nuevo.');
+          setError('El correo o contraseña son incorrectos, verifícalos e intenta de nuevo.');
           break;
       }
     }

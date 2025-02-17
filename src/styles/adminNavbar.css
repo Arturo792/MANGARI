@@ -1,0 +1,23 @@
+.admin-navbar {
+    background-color: #333;
+    padding: 10px;
+  }
+  
+  .admin-navbar-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .admin-navbar-link {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+  }
+  
+  .admin-navbar-link:hover {
+    color: #28a745;
+  }

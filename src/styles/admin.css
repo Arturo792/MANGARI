@@ -1,0 +1,49 @@
+/* admin.css */
+.admin-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.submit-button {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}
+
+.logout-button {
+  padding: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
