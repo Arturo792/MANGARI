@@ -18,7 +18,7 @@ const AdminNavbar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/adminProducts" className="admin-navbar-link">
+          <Link to="/admin/products" className="admin-navbar-link">
             Ver Productos
           </Link>
         </li>
