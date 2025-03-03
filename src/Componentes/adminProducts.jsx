@@ -1,4 +1,3 @@
-// AdminProducts.jsx
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from '../firebase';
@@ -31,12 +30,15 @@ const AdminProducts = () => {
   };
 
   const handleDelete = async (productId) => {
-    try {
-      await deleteDoc(doc(db, "products", productId));
-      alert("Producto eliminado correctamente.");
-      setProducts(products.filter((product) => product.id !== productId)); // Actualiza la lista
-    } catch (error) {
-      console.error("Error al eliminar producto:", error);
+    const confirmDelete = window.confirm("¿Estás seguro que deseas eliminar este producto?");
+    if (confirmDelete) {
+      try {
+        await deleteDoc(doc(db, "products", productId));
+        alert("Producto eliminado correctamente.");
+        setProducts(products.filter((product) => product.id !== productId)); // Actualiza la lista
+      } catch (error) {
+        console.error("Error al eliminar producto:", error);
+      }
     }
   };
 
@@ -48,7 +50,7 @@ const AdminProducts = () => {
           <li key={product.id} className="admin-product-item">
             <img
               src={product.image}
-              alt={product.name}
+              alt={product.name} 
               className="admin-product-image"
             />
             <h2 className="admin-product-title">{product.name}</h2>

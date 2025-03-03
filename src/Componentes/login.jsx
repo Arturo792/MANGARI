@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore"; // Importa Firestore
-import { auth, db } from '../firebase'; // Asegúrate de exportar db desde firebase.js
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from '../firebase';
 import '../styles/login.css';
 
 const Login = () => {
@@ -13,8 +13,9 @@ const Login = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Verificar el estado de autenticación al cargar el componente
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
       } else {
@@ -26,6 +27,20 @@ const Login = () => {
     return () => unsubscribe();
   }, []);
 
+  // Cerrar sesión al recargar la página
+  useEffect(() => {
+    const handleBeforeUnload = async () => {
+      await signOut(auth); // Cierra la sesión al recargar
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+  // Función para manejar el inicio de sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -34,12 +49,17 @@ const Login = () => {
       // 1. Iniciar sesión con Firebase Auth
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      console.log("Usuario autenticado:", user.email);
 
       // 2. Verificar si el usuario es un administrador
       const adminDoc = await getDoc(doc(db, "admins", user.email)); // Busca el documento en la colección "admins"
+      console.log("Documento de administrador:", adminDoc.data()); // Depuración
+
       if (adminDoc.exists()) {
+        console.log("El usuario es un administrador. Redirigiendo a /admin");
         navigate('/admin'); // Redirige al panel de administrador
       } else {
+        console.log("El usuario no es un administrador. Redirigiendo a /home");
         navigate('/home'); // Redirige a la página principal
       }
     } catch (error) {
@@ -61,15 +81,6 @@ const Login = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth); // Cierra la sesión del usuario
-      navigate('/'); // Redirige al usuario a la página principal
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
-  };
-
   // Si la aplicación está cargando, mostrar un mensaje de carga
   if (loading) {
     return (
@@ -85,7 +96,7 @@ const Login = () => {
       <div className="login-container">
         <h2>Ya has iniciado sesión</h2>
         <p>Bienvenido, {user.email}</p>
-        <button onClick={handleLogout} className="submit-button">
+        <button onClick={() => signOut(auth)} className="submit-button" style={{ backgroundColor: '#BEAEA0', color: '#212121' }}>
           CERRAR SESIÓN
         </button>
       </div>
@@ -123,9 +134,8 @@ const Login = () => {
         </div>
 
         {error && <p className="error-message">{error}</p>}
-
-        <button type="submit" className="submit-button">
-          INICIAR SESIÓN
+        <button type="submit" className="submit-button" style={{ backgroundColor: '#BEAEA0', color: '#212121' }}>
+        INICIAR SESIÓN
         </button>
       </form>
 

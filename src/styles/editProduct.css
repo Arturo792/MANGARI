@@ -1,41 +1,103 @@
-/* EditProduct.css */
+/* Estilos generales para los botones */
+.button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  color: #212121; /* Color de texto oscuro */
+}
+
+/* Botón "Editar" */
+.edit-button {
+  background-color: #BEAEA0; /* Color primario de la paleta */
+}
+
+.edit-button:hover {
+  background-color: #E2DBD5; /* Color secundario de la paleta */
+}
+
+/* Botón "Eliminar" */
+.delete-button {
+  background-color: #CFC3B9; /* Color terciario de la paleta */
+}
+
+.delete-button:hover {
+  background-color: #BEAEA0; /* Color primario de la paleta */
+}
+
+/* Botón "Actualizar Producto" */
+.submit-button {
+  background-color: #BEAEA0; /* Color primario de la paleta */
+}
+
+.submit-button:hover {
+  background-color: #E2DBD5; /* Color secundario de la paleta */
+}
+
+/* Estilos para la lista de productos */
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-item {
+  border: 1px solid #CFC3B9; /* Borde con color de la paleta */
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #FFFFFF; /* Fondo blanco */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+  margin-top: 10px; /* Espacio arriba de los botones */
+}
+
+/* Estilos para el formulario de edición */
 .edit-product-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .edit-product-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .input-group label {
-    font-weight: bold;
-  }
-  
-  .input-group input,
-  .input-group textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-  }
-  
-  .submit-button {
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: #218838;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #FFFFFF; /* Fondo blanco */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.edit-product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group label {
+  font-weight: bold;
+  color: #212121; /* Color de texto oscuro */
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #CFC3B9; /* Borde con color de la paleta */
+  border-radius: 4px;
+  background-color: #FFFFFF; /* Fondo blanco */
+  color: #212121; /* Color de texto oscuro */
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #BEAEA0; /* Cambia el color del borde al enfocar */
+  outline: none;
+}
+
+.error-message {
+  color: #575757; /* Color de texto gris */
+  margin-top: 10px;
+}

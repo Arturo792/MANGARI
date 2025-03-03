@@ -1,9 +1,8 @@
-// EditProduct.jsx
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from '../firebase';
 import { useNavigate, useParams } from 'react-router-dom';
-import '../styles/editProduct.css';
+import '../styles/editProduct.css'; // Importa el archivo CSS con los estilos
 
 const EditProduct = () => {
   const { id } = useParams(); // Obtener el ID del producto desde la URL

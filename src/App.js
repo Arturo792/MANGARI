@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import Products from './Componentes/Products';
 import Navbar from './Componentes/Navbar';
 import Login from './Componentes/login';
@@ -17,6 +18,8 @@ import AdminNavbar from './Componentes/adminNavbar';
 import AddProduct from './Componentes/addProduct';
 import AdminProducts from './Componentes/adminProducts';
 import EditProduct from './Componentes/editProduct';
+import AddAdmin from './Componentes/addAdmin';
+import './App.css';
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -25,10 +28,14 @@ const App = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log("Usuario autenticado:", user.email);
+        const isAdmin = await checkAdminRole(user);
+        console.log("¿Es administrador?", isAdmin);
         setUser(user);
       } else {
+        console.log("No hay usuario autenticado.");
         setUser(null);
       }
       setLoading(false);
@@ -36,6 +43,17 @@ const App = () => {
 
     return () => unsubscribe();
   }, []);
+
+  const checkAdminRole = async (user) => {
+    if (!user) return false;
+    try {
+      const adminDoc = await getDoc(doc(db, "admins", user.email)); // Verifica el rol del usuario
+      return adminDoc.exists();
+    } catch (error) {
+      console.error("Error verificando rol de administrador:", error);
+      return false;
+    }
+  };
 
   const addToCart = (product) => {
     const existingItem = cartItems.find((item) => item.id === product.id);
@@ -60,10 +78,7 @@ const App = () => {
 
   return (
     <div>
-      {/* Muestra el AdminNavbar solo si la ruta comienza con /admin y hay un usuario autenticado */}
       {location.pathname.startsWith('/admin') && user && <AdminNavbar />}
-
-      {/* Muestra el Navbar normal si no estamos en una ruta de administrador */}
       {!location.pathname.startsWith('/admin') && <Navbar cartItems={cartItems} />}
 
       <Routes>
@@ -89,7 +104,7 @@ const App = () => {
         <Route
           path="/admin"
           element={
-            user ? (
+            user && checkAdminRole(user) ? (
               <AdminPanel />
             ) : (
               <Navigate to="/login" />
@@ -99,7 +114,7 @@ const App = () => {
         <Route
           path="/admin/add-product"
           element={
-            user ? (
+            user && checkAdminRole(user) ? (
               <AddProduct />
             ) : (
               <Navigate to="/login" />
@@ -109,8 +124,18 @@ const App = () => {
         <Route
           path="/admin/products"
           element={
-            user ? (
+            user && checkAdminRole(user) ? (
               <AdminProducts />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/admin/add-admin"
+          element={
+            user && checkAdminRole(user) ? (
+              <AddAdmin />
             ) : (
               <Navigate to="/login" />
             )

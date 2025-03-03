@@ -1,38 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { doc, getDoc } from "firebase/firestore";
+import { db } from '../firebase';
+import '../styles/ProductDetail.Modules.css';
 
 const ProductDetail = ({ addToCart }) => {
-  const { id } = useParams(); 
+  const { id } = useParams(); // Obtén el ID del producto desde la URL
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true); // Estado para manejar la carga
 
   useEffect(() => {
-    axios.get(`https://fakestoreapi.com/products/${id}`)
-      .then(response => {
-        setProduct(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching product details: ', error);
-      });
+    const fetchProduct = async () => {
+      try {
+        // Obtén el documento del producto desde Firestore usando el ID
+        const productDoc = await getDoc(doc(db, "products", id));
+        if (productDoc.exists()) {
+          // Si el producto existe, guarda sus datos en el estado
+          setProduct({ id: productDoc.id, ...productDoc.data() });
+        } else {
+          console.error("El producto no existe.");
+        }
+      } catch (error) {
+        console.error("Error fetching product details: ", error);
+      } finally {
+        setLoading(false); // Finaliza la carga
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
-  if (!product) {
-    return <div>Loading...</div>; 
+  // Si el producto aún no se ha cargado, muestra un mensaje de carga
+  if (loading) {
+    return <div>Cargando...</div>;
   }
+
+  // Si no se encontró el producto, muestra un mensaje de error
+  if (!product) {
+    return <div>El producto no existe.</div>;
+  }
+
+  const handleBuyNow = () => {
+    // Lógica para comprar ahora
+    console.log("Comprar ahora:", product);
+  };
 
   return (
     <div className="product-detail">
-      <h1>{product.title}</h1>
-      <img src={product.image} alt={product.title} className="product-image" />
-      <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
-      <p>Category: {product.category}</p>
-      <p>Rating: {product.rating.rate} ({product.rating.count} reviews)</p>
-
-      {/* Botón para agregar al carrito */}
-      <button onClick={() => addToCart(product)} className="add-to-cart-button">
-        🛒 Agregar al carrito
-      </button>
+      <img src={product.image} alt={product.name} className="product-image" />
+      <div className="product-detail-content">
+        <h1>{product.name}</h1>
+        <p>{product.description}</p>
+        <p className="price">Precio: ${product.price}</p>
+        <div className="buttons-container">
+          <button onClick={handleBuyNow} className="buy-now-button">
+            Comprar ahora
+          </button>
+          <button onClick={() => addToCart(product)} className="add-to-cart-button">
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

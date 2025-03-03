@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Cart.css';
@@ -8,7 +9,7 @@ const Cart = ({ cartItems, setCartItems }) => {
     const updatedCart = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCart); 
   };
-
+ 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (

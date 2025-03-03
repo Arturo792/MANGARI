@@ -60,7 +60,7 @@
   
   /* Botón de eliminar */
   .remove-button {
-    background-color: #ff4d4d;
+    background-color: #BEAEA0;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -70,7 +70,7 @@
   }
   
   .remove-button:hover {
-    background-color: #ff1a1a;
+    background-color: #CFC3B9;
   }
   
   /* Total a pagar */
@@ -90,7 +90,7 @@
     display: inline-block;
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #BEAEA0;
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -99,7 +99,7 @@
   }
   
   .continue-shopping:hover {
-    background-color: #0056b3;
+    background-color: #ddd;
   }
   
   /* Mensaje cuando no hay productos en el carrito */

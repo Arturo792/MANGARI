@@ -10,15 +10,13 @@ const Footer = () => {
         <div className="social-media">
           <h3>Síguenos</h3>
           <div className="social-icons">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/share/17RkuQ9fCL/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">
               <FaFacebook className="icon" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/mangari.joy/profilecard/?igsh=MTFrcGszMTQ4MXB2OQ==" target="_blank" rel="noopener noreferrer">
               <FaInstagram className="icon" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-              <FaTwitter className="icon" />
-            </a>
+           
           </div>
         </div>
 
@@ -26,9 +24,9 @@ const Footer = () => {
         <div className="contact-info">
           <h3>Contacto</h3>
           <p>
-            <FaEnvelope className="icon" /> info@mangari.com
+            <FaEnvelope className="icon" /> mangari.joy@gmail.com
           </p>
-          <p>Teléfono: +52 123 456 7890</p>
+          <p>Teléfono: +52 443-2647360</p> 
         </div>
 
         {/* Derechos de autor */}

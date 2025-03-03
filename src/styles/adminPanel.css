@@ -1,49 +1,57 @@
-/* admin.css */
 .admin-container {
-  max-width: 600px;
+  max-width: 800px; /* Aumentamos el ancho máximo */
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px; /* Más espacio interno */
   text-align: center;
+  background-color: #FFFFFF; /* Fondo blanco */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
-.admin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.submit-button {
-  padding: 10px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.submit-button:hover {
-  background-color: #218838;
+.admin-container h1 {
+  font-size: 28px;
+  color: #212121; /* Color de texto oscuro */
+  margin-bottom: 30px; /* Más espacio debajo del título */
 }
 
 .logout-button {
-  padding: 10px;
-  background-color: #dc3545;
-  color: white;
+  padding: 12px 24px; /* Botón más grande */
+  background-color: #CFC3B9; /* Color terciario de la paleta */
+  color: #212121; /* Color de texto oscuro */
   border: none;
   cursor: pointer;
-  margin-bottom: 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 30px; /* Más espacio debajo del botón */
 }
 
 .logout-button:hover {
-  background-color: #c82333;
+  background-color: #BEAEA0; /* Color primario de la paleta */
+}
+
+.admin-options {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espacio entre los botones */
+}
+
+.admin-options button {
+  padding: 15px 30px; /* Botones más grandes */
+  background-color: #BEAEA0; /* Color primario de la paleta */
+  color: #212121; /* Color de texto oscuro */
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.admin-options button:hover {
+  background-color: #E2DBD5; /* Color secundario de la paleta */
 }
 
 .error-message {
-  color: red;
+  color: #575757; /* Color de texto gris */
   margin-top: 10px;
 }
