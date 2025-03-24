@@ -5,7 +5,7 @@ import '../styles/adminNavbar.css';
 
 const AdminNavbar = () => {
   return (
-    <nav className="admin-navbar">
+    <nav className="admin-navbar"> 
       <ul className="admin-navbar-list">
         <li>
           <Link to="/admin" className="admin-navbar-link">
@@ -20,6 +20,11 @@ const AdminNavbar = () => {
         <li>
           <Link to="/admin/products" className="admin-navbar-link">
             Ver Productos
+          </Link>
+        </li>
+        <li>
+          <Link to="/admin/piedras" className="admin-navbar-link">
+            Editar Piedras
           </Link>
         </li>
       </ul>

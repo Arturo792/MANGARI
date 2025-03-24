@@ -1,0 +1,82 @@
+/* Contenedor principal */
+.edit-profile-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #E2DBD5;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título del formulario */
+  .edit-profile-container h2 {
+    color: #212121; 
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Formulario */
+  .edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Grupos de entrada */
+  .input-group {
+    position: relative;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #CFC3B9; 
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #FFFFFF; 
+    color: #212121; 
+  }
+  
+  .input-group label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: #E2DBD5; 
+    padding: 0 5px;
+    font-size: 14px;
+    color: #575757; 
+    transition: all 0.3s ease;
+  }
+  
+
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    top: 0;
+    font-size: 12px;
+    color: #212121;
+  }
+  
+  /* Botón de guardar cambios */
+  .submit-button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #BEAEA0; 
+    color: #212121;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #CFC3B9;
+  }
+  
+  /* Mensajes de error (si los hay) */
+  .error-message {
+    color: #FF0000; 
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+  }

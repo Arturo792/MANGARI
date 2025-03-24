@@ -8,11 +8,11 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: 80px; 
-  z-index: 1000; 
+  height: 80px;
+  z-index: 1000;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-  
 }
+
 .navbar-links {
   display: flex;
   gap: 20px;
@@ -38,84 +38,96 @@
 }
 
 .main-content {
-  margin-top: 80px; 
+  margin-top: 80px;
 }
 
-
 .navbar .navbar-brand {
-  color: #fff; 
-  font-size: 1.5rem; 
-  font-weight: bold; 
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
   display: flex;
-  align-items: center; 
-  text-decoration: none; 
-  transition: color 0.3s ease; 
+  align-items: center;
+  text-decoration: none;
+  transition: color 0.3s ease;
   gap: 10px;
 }
 
 .navbar .navbar-brand:hover {
-  color: #d4a373; 
+  color: #d4a373;
 }
 
 .navbar .navbar-brand img {
-  width: 40px; 
-  height: 40px; 
+  width: 40px;
+  height: 40px;
   margin-left: 20px;
-  border-radius: 50%; 
-  margin-right: 0.5rem; 
-  transition: transform 0.3s ease; 
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
 }
 
 .navbar .navbar-brand img:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
 .navbar .login-link {
-  color: #ffffff ; 
-  text-decoration: none; 
+  color: #ffffff;
+  text-decoration: none;
   font-size: 1.1rem;
   cursor: pointer;
   margin-right: 20px;
-  transition: color 0.3s ease, transform 0.2s ease; 
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .navbar .login-link:hover {
-  color: #d4a373; 
-  transform: scale(1.05); 
+  color: #d4a373;
+  transform: scale(1.05);
 }
 
 .navbar .theme-toggle-button:hover {
-  background-color: #a6764e; 
+  background-color: #a6764e;
   transform: scale(1.05);
-} 
+}
 
 .navbar .cart-link {
-  color: #ffffff; 
-  text-decoration: none; 
+  color: #ffffff;
+  text-decoration: none;
   font-size: 1.5rem;
-  position: relative; 
-  margin-right: 20px; 
-  transition: color 0.3s ease, transform 0.2s ease; 
+  position: relative;
+  margin-right: 20px;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .navbar .cart-link:hover {
-  color: #d4a373; 
-  transform: scale(1.1); 
+  color: #d4a373;
+  transform: scale(1.1);
 }
 
 .navbar .cart-count {
-  position: absolute; 
-  top: -10px; 
-  right: -10px; 
+  position: absolute;
+  top: -10px;
+  right: -10px;
   color: #fff;
-  border-radius: 50%; 
+  border-radius: 50%;
   padding: 4px 8px;
   font-size: 0.8rem;
-  font-weight: bold; 
-  min-width: 20px; 
+  font-weight: bold;
+  min-width: 20px;
   text-align: center;
-  line-height: 1; 
+  line-height: 1;
+}
+
+
+.navbar-icon {
+  width: 50px; 
+  height: 50px;
+  transition: filter 0.3s ease, transform 0.2s ease;
 }
 
 
 
+/* Ajustes para el contenedor de los iconos */
+.navbar-actions .login-link,
+.navbar-actions .cart-link {
+  display: flex;
+  align-items: center;
+}

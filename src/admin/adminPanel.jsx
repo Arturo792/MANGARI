@@ -45,15 +45,8 @@ const AdminPanel = () => {
         Cerrar Sesión
       </button>
 
-      <div className="admin-options">
-        <button onClick={() => navigate('/admin/add-product')}>
-          Agregar Producto
-        </button>
-        <button onClick={() => navigate('/admin/products')}>
-          Ver Productos
-        </button>
-      </div>
-    </div>
+     
+    </div> 
   );
 };
 

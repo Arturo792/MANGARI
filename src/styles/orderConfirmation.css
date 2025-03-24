@@ -1,0 +1,40 @@
+/* Contenedor principal de la confirmación */
+.confirmation-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #E2DBD5; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  /* Título de la confirmación */
+  .confirmation-container h1 {
+    color: #212121; 
+    margin-bottom: 20px;
+  }
+  
+  /* Mensaje de confirmación */
+  .confirmation-container p {
+    color: #575757; 
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  /* Botón de volver a la tienda */
+  .continue-shopping {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #575757;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .continue-shopping:hover {
+    background-color: #212121; 
+  }

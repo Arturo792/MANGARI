@@ -90,13 +90,24 @@ const Login = () => {
     );
   }
 
-  // Si el usuario ya está autenticado, mostrar un mensaje y un botón para cerrar sesión
+
   if (user) {
     return (
       <div className="login-container">
         <h2>Ya has iniciado sesión</h2>
         <p>Bienvenido, {user.email}</p>
-        <button onClick={() => signOut(auth)} className="submit-button" style={{ backgroundColor: '#BEAEA0', color: '#212121' }}>
+        <button
+          onClick={() => navigate('/edit-profile')} // Redirige a /edit-profile
+          className="submit-button"
+          style={{ backgroundColor: '#BEAEA0', color: '#212121', marginBottom: '10px' }}
+        >
+          EDITAR PERFIL
+        </button>
+        <button
+          onClick={() => signOut(auth)}
+          className="submit-button"
+          style={{ backgroundColor: '#BEAEA0', color: '#212121' }}
+        >
           CERRAR SESIÓN
         </button>
       </div>

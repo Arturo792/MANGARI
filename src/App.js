@@ -11,14 +11,17 @@ import ProductDetail from './Componentes/ProductDetail';
 import Cart from './Componentes/Cart';
 import Home from './Componentes/Home';
 import Piedras from './Componentes/Piedras';
-import Nosotros from './Componentes/Nosotros';
-import Footer from './Componentes/Footer';
-import AdminPanel from './Componentes/adminPanel';
-import AdminNavbar from './Componentes/adminNavbar';
-import AddProduct from './Componentes/addProduct';
-import AdminProducts from './Componentes/adminProducts';
-import EditProduct from './Componentes/editProduct';
-import AddAdmin from './Componentes/addAdmin';
+import Nosotros from './admin/Nosotros';
+import Footer from './admin/Footer';
+import AdminPanel from './admin/adminPanel';
+import AdminNavbar from './admin/adminNavbar';
+import AddProduct from './admin/addProduct';
+import AdminProducts from './admin/adminProducts';
+import EditProduct from './admin/editProduct';
+import AddAdmin from './admin/addAdmin';
+import EditProfile from './Componentes/editProfile'; 
+import Checkout from './admin/Checkout'; 
+import OrderConfirmation from './admin/orderConfirmation'; 
 import './App.css';
 
 const App = () => {
@@ -27,6 +30,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
+  // Verificar el estado de autenticación al cargar la aplicación
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -44,10 +48,11 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
+  // Verificar si el usuario es administrador
   const checkAdminRole = async (user) => {
     if (!user) return false;
     try {
-      const adminDoc = await getDoc(doc(db, "admins", user.email)); // Verifica el rol del usuario
+      const adminDoc = await getDoc(doc(db, "admins", user.email)); 
       return adminDoc.exists();
     } catch (error) {
       console.error("Error verificando rol de administrador:", error);
@@ -55,6 +60,7 @@ const App = () => {
     }
   };
 
+  // Agregar productos al carrito
   const addToCart = (product) => {
     const existingItem = cartItems.find((item) => item.id === product.id);
     if (existingItem) {
@@ -68,6 +74,7 @@ const App = () => {
     }
   };
 
+ 
   if (loading) {
     return (
       <div className="loading-container">
@@ -78,17 +85,22 @@ const App = () => {
 
   return (
     <div>
+      {/* Mostrar Navbar según la ruta */}
       {location.pathname.startsWith('/admin') && user && <AdminNavbar />}
       {!location.pathname.startsWith('/admin') && <Navbar cartItems={cartItems} />}
 
       <Routes>
+        {/* Rutas públicas */}
         <Route path="/" element={<Navigate to="/Home" />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/products" element={<Products addToCart={addToCart} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
-        <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+        <Route path="/piedras" element={<Piedras />} />
+        <Route path="/nosotros" element={<Nosotros />} />
+
+        {/* Rutas protegidas (requieren autenticación) */}
         <Route
           path="/cart"
           element={
@@ -99,8 +111,38 @@ const App = () => {
             )
           }
         />
-        <Route path="/piedras" element={<Piedras />} />
-        <Route path="/nosotros" element={<Nosotros />} />
+        <Route
+          path="/edit-profile"
+          element={
+            user ? (
+              <EditProfile />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            user ? (
+              <Checkout />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/order-confirmation"
+          element={
+            user ? (
+              <OrderConfirmation />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* Rutas de administrador (requieren rol de administrador) */}
         <Route
           path="/admin"
           element={
@@ -132,6 +174,16 @@ const App = () => {
           }
         />
         <Route
+          path="/admin/edit-product/:id"
+          element={
+            user && checkAdminRole(user) ? (
+              <EditProduct />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
           path="/admin/add-admin"
           element={
             user && checkAdminRole(user) ? (
@@ -142,6 +194,8 @@ const App = () => {
           }
         />
       </Routes>
+
+      {/* Footer */}
       <Footer />
     </div>
   );
@@ -154,3 +208,4 @@ const AppWrapper = () => (
 );
 
 export default AppWrapper;
+

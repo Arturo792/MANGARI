@@ -53,9 +53,7 @@ const ProductDetail = ({ addToCart }) => {
         <p>{product.description}</p>
         <p className="price">Precio: ${product.price}</p>
         <div className="buttons-container">
-          <button onClick={handleBuyNow} className="buy-now-button">
-            Comprar ahora
-          </button>
+          
           <button onClick={() => addToCart(product)} className="add-to-cart-button">
             Agregar al carrito
           </button>

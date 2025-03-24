@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../img/mangari-original.png';
+import carrito from '../img/bolsa.png';
+import perfil from '../img/perfil.png'; 
 import '../styles/Navbar.css';
 
 const Navbar = ({ cartItems }) => {
@@ -30,14 +32,10 @@ const Navbar = ({ cartItems }) => {
       </div>
       <div className="navbar-actions">
         <Link to="/login" className="login-link">
-          <span role="img" aria-label="Iniciar sesión">
-            👤
-          </span>
+          <img src={perfil} alt="Iniciar sesión" className="navbar-icon" />
         </Link>
         <Link to="/cart" className="cart-link">
-          <span role="img" aria-label="Carrito">
-            🛒
-          </span>
+          <img src={carrito} alt="Carrito" className="navbar-icon" />
           {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
         </Link>
       </div>
