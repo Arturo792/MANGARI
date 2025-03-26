@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
-import '../styles/Cart.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase'; // Asegúrate que la ruta sea correcta
+import '../styles/Cart.modules.css';
+import CardPaymentForm from './CardPaymentForm';
 
-const Cart = ({ cartItems, setCartItems }) => {
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
+const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [coupon, setCoupon] = useState({
     code: '',
@@ -15,26 +21,53 @@ const Cart = ({ cartItems, setCartItems }) => {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [customerData, setCustomerData] = useState({
     name: '',
-    email: '',
+    email: user?.email || '',
     phone: '',
     address: '',
     zipCode: ''
   });
   const [formErrors, setFormErrors] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [productsFromDB, setProductsFromDB] = useState([]);
 
-  // Obtener datos del usuario si está logueado
+  // Cargar productos desde Firestore
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (userData.email) {
-      setCustomerData(prev => ({
-        ...prev,
-        email: userData.email,
-        name: userData.name || ''
-      }));
+    const loadProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const products = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title || 'Producto sin nombre',
+          price: Number(doc.data().price) || 0,
+          image: doc.data().image || '/placeholder-product.jpg',
+          stock: Number(doc.data().stock) || 0
+        }));
+        setProductsFromDB(products);
+      } catch (error) {
+        console.error("Error cargando productos:", error);
+      }
+    };
+    loadProducts();
+  }, []);
+
+  // Cargar datos del usuario
+  useEffect(() => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      if (userData.email) {
+        setCustomerData(prev => ({
+          ...prev,
+          email: userData.email,
+          name: userData.name || '',
+          ...(userData.phone && { phone: userData.phone }),
+          ...(userData.address && { address: userData.address })
+        }));
+      }
+    } catch (error) {
+      console.error('Error al cargar datos del usuario:', error);
     }
   }, []);
 
-  // Función para aplicar cupón
   const handleApplyCoupon = useCallback((code = coupon.code) => {
     const upperCode = code.toUpperCase().trim();
     
@@ -57,35 +90,33 @@ const Cart = ({ cartItems, setCartItems }) => {
     return false;
   }, [coupon.code]);
 
-  // Aplicar cupón automáticamente si viene de registro
   useEffect(() => {
     if (location.state?.couponCode) {
       handleApplyCoupon(location.state.couponCode);
     }
   }, [location.state, handleApplyCoupon]);
 
-  // Función para eliminar producto del carrito
   const handleRemove = (id) => {
-    const updatedCart = cartItems.filter(item => item.id !== id);
-    setCartItems(updatedCart);
+    removeFromCart(id);
   };
 
-  // Función para cambiar cantidad de productos
   const handleQuantityChange = (id, change) => {
-    setCartItems(prevItems =>
-      prevItems.map(item => {
-        if (item.id === id) {
-          const newQuantity = item.quantity + change;
-          if (newQuantity < 1) return item;
-          if (item.stock && newQuantity > item.stock) return item;
-          return { ...item, quantity: newQuantity };
-        }
-        return item;
-      })
-    );
+    const item = cartItems.find(item => item.id === id);
+    if (!item) return;
+
+    const newQuantity = item.quantity + change;
+    if (newQuantity < 1) return;
+
+    // Verificar stock contra la base de datos
+    const dbProduct = productsFromDB.find(p => p.id === id);
+    if (dbProduct && newQuantity > dbProduct.stock) {
+      setPaymentError(`No hay suficiente stock para ${item.title}`);
+      return;
+    }
+
+    updateQuantity(id, newQuantity);
   };
 
-  // Validar formulario de cliente
   const validateForm = () => {
     const errors = {};
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -102,7 +133,6 @@ const Cart = ({ cartItems, setCartItems }) => {
     return Object.keys(errors).length === 0;
   };
 
-  // Manejar cambios en los campos del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCustomerData(prev => ({
@@ -110,7 +140,6 @@ const Cart = ({ cartItems, setCartItems }) => {
       [name]: value
     }));
 
-    // Limpiar error cuando el usuario escribe
     if (formErrors[name]) {
       setFormErrors(prev => ({
         ...prev,
@@ -119,10 +148,9 @@ const Cart = ({ cartItems, setCartItems }) => {
     }
   };
 
-  // Función para manejar el pago con MercadoPago
-  const handlePayment = async () => {
+  const handleRealMercadoPagoPayment = async () => {
     if (!validateForm()) {
-      setPaymentError('Por favor corrige los errores en el formulario');
+      setPaymentError('Completa todos los campos correctamente');
       return;
     }
 
@@ -130,131 +158,208 @@ const Cart = ({ cartItems, setCartItems }) => {
     setPaymentError(null);
     
     try {
-      const token = localStorage.getItem('token');
-      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-
-      const payload = {
-        items: cartItems.map(item => ({
-          title: item.title.substring(0, 50),
-          unit_price: item.price,
+      // Validar items contra la base de datos
+      const validItems = cartItems.map(item => {
+        const dbProduct = productsFromDB.find(p => p.id === item.id);
+        return {
+          id: item.id,
+          title: dbProduct?.title || item.title,
+          unit_price: dbProduct?.price || item.price,
           quantity: item.quantity,
-          ...(item.image && { picture_url: item.image })
-        })),
-        payer: {
-          name: customerData.name,
-          email: customerData.email,
-          phone: {
-            number: customerData.phone
-          },
-          address: {
-            street_name: customerData.address,
-            zip_code: customerData.zipCode
-          }
-        },
-        back_urls: {
-          success: `${window.location.origin}/pago-exitoso`,
-          failure: `${window.location.origin}/pago-fallido`,
-          pending: `${window.location.origin}/pago-pendiente`
-        },
-        auto_return: 'approved',
-        metadata: {
-          userId: userData.id || 'guest',
-          coupon: coupon.applied ? coupon.code : 'none'
-        }
-      };
+          picture_url: dbProduct?.image || item.image
+        };
+      }).filter(item => item.title && item.unit_price > 0);
 
-      const response = await fetch('http://localhost:3001/create-preference', {
+      if (validItems.length !== cartItems.length) {
+        throw new Error('Algunos productos no están disponibles');
+      }
+
+      const response = await fetch(`${API_URL}/create-preference`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` })
-        },
-        body: JSON.stringify(payload)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: validItems,
+          payer: {
+            name: customerData.name,
+            email: customerData.email,
+            phone: { number: customerData.phone },
+            address: {
+              street_name: customerData.address,
+              zip_code: customerData.zipCode
+            }
+          },
+          metadata: { userId: user?.id || 'guest' }
+        })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al procesar el pago');
-      }
+      const data = await response.json();
       
-      const { init_point } = await response.json();
-      window.location.href = init_point;
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al crear el pago');
+      }
 
+      window.location.href = data.sandbox_init_point;
+      
     } catch (error) {
-      console.error('Error en el pago:', error);
-      setPaymentError(error.message || 'Ocurrió un error al procesar tu pago. Por favor intenta nuevamente.');
+      console.error('Error:', error);
+      setPaymentError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Calcular totales
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const discountAmount = subtotal * coupon.discount;
-  const total = subtotal - discountAmount;
+  const handleRealCardPayment = async (cardData) => {
+    if (!validateForm()) {
+      setPaymentError('Completa todos los campos correctamente');
+      return;
+    }
+
+    setLoading(true);
+    setPaymentError(null);
+    
+    try {
+      // Validar items contra la base de datos
+      const validItems = cartItems.map(item => {
+        const dbProduct = productsFromDB.find(p => p.id === item.id);
+        if (!dbProduct || item.quantity > dbProduct.stock) {
+          throw new Error(`No hay suficiente stock para ${item.title}`);
+        }
+        return {
+          id: item.id,
+          title: dbProduct.title,
+          unit_price: dbProduct.price,
+          quantity: item.quantity
+        };
+      });
+
+      const response = await fetch(`${API_URL}/process-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: validItems,
+          payer: {
+            name: customerData.name,
+            email: customerData.email,
+            phone: { number: customerData.phone },
+            address: {
+              street_name: customerData.address,
+              zip_code: customerData.zipCode
+            }
+          },
+          payment_method: {
+            token: cardData.token,
+            payment_method_id: cardData.paymentMethodId,
+            installments: cardData.installments || 1
+          }
+        })
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al procesar el pago');
+      }
+
+      navigate('/order-confirmation', {
+        state: {
+          orderDetails: {
+            items: cartItems,
+            customer: customerData,
+            paymentMethod: 'Tarjeta',
+            total: calculateTotal(),
+            paymentData: data
+          }
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error:', error);
+      setPaymentError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateSubtotal = () => cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const calculateDiscount = () => calculateSubtotal() * coupon.discount;
+  const calculateTotal = () => calculateSubtotal() - calculateDiscount();
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="cart-container empty">
+        <h1>Tu carrito está vacío</h1>
+        <p>No hay productos en tu carrito de compras.</p>
+        <button 
+          className="continue-shopping-btn"
+          onClick={() => navigate('/products')}
+        >
+          Ver productos
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="cart-container">
       <h1>Carrito de Compras</h1>
       
-      {cartItems.length === 0 ? (
-        <div className="empty-cart">
-          <p>No hay productos en el carrito.</p>
-          <a href="/products" className="continue-shopping">
-            Seguir comprando
-          </a>
-        </div>
-      ) : (
-        <>
-          <ul className="cart-list">
-            {cartItems.map((item) => (
-              <li key={item.id} className="cart-item">
-                <img 
-                  src={item.image || '/placeholder-product.jpg'} 
-                  alt={item.title} 
-                  className="cart-item-image" 
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/placeholder-product.jpg';
-                  }}
-                />
-                <div className="cart-item-details">
-                  <h2>{item.title}</h2>
-                  <div className="quantity-control">
+      <div className="cart-content">
+        <div className="cart-items">
+          {cartItems.map((item) => {
+            const dbProduct = productsFromDB.find(p => p.id === item.id) || item;
+            return (
+              <div key={item.id} className="cart-item">
+                <div className="item-image">
+                  <img 
+                    src={dbProduct.image || '/placeholder-product.jpg'} 
+                    alt={dbProduct.title} 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/placeholder-product.jpg';
+                    }}
+                  />
+                </div>
+                
+                <div className="item-details">
+                  <h3>{dbProduct.title}</h3>
+                  <p>Precio unitario: ${dbProduct.price.toFixed(2)}</p>
+                  {dbProduct.stock && (
+                    <p>Disponibles: {dbProduct.stock}</p>
+                  )}
+                  
+                  <div className="quantity-controls">
                     <button 
                       onClick={() => handleQuantityChange(item.id, -1)}
                       disabled={item.quantity <= 1}
-                      className="quantity-button"
                     >
                       -
                     </button>
-                    <span className="quantity-value">{item.quantity}</span>
+                    <span>{item.quantity}</span>
                     <button 
                       onClick={() => handleQuantityChange(item.id, 1)}
-                      disabled={item.stock && item.quantity >= item.stock}
-                      className="quantity-button"
+                      disabled={dbProduct.stock && item.quantity >= dbProduct.stock}
                     >
                       +
                     </button>
-                    {item.stock && (
-                      <span className="stock-info">
-                        (Disponibles: {item.stock})
-                      </span>
-                    )}
                   </div>
-                  <p>Precio unitario: ${item.price.toFixed(2)}</p>
-                  <p>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
+                  
+                  <p className="item-subtotal">
+                    Subtotal: ${(dbProduct.price * item.quantity).toFixed(2)}
+                  </p>
+                  
                   <button 
-                    onClick={() => handleRemove(item.id)} 
-                    className="remove-button"
+                    onClick={() => handleRemove(item.id)}
+                    className="remove-btn"
                   >
                     Eliminar
                   </button>
                 </div>
-              </li>
-            ))}
-          </ul>
-          
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="cart-summary">
           <div className="coupon-section">
             <h3>Aplicar Cupón</h3>
             <div className="coupon-input">
@@ -262,12 +367,12 @@ const Cart = ({ cartItems, setCartItems }) => {
                 type="text"
                 value={coupon.code}
                 onChange={(e) => setCoupon({...coupon, code: e.target.value})}
-                placeholder="Ingresa tu código"
+                placeholder="Código de cupón"
                 disabled={coupon.applied}
               />
-              <button 
+              <button
                 onClick={() => handleApplyCoupon()}
-                disabled={coupon.applied}
+                disabled={coupon.applied || !coupon.code.trim()}
               >
                 {coupon.applied ? 'Aplicado' : 'Aplicar'}
               </button>
@@ -279,144 +384,149 @@ const Cart = ({ cartItems, setCartItems }) => {
             )}
           </div>
 
-          {showPaymentForm ? (
-            <div className="payment-form">
-              <h3>Información de Envío</h3>
-              
-              <div className="form-group">
-                <label>Nombre Completo*</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={customerData.name}
-                  onChange={handleInputChange}
-                  required
-                  className={formErrors.name ? 'error' : ''}
-                />
-                {formErrors.name && <span className="error-message">{formErrors.name}</span>}
-              </div>
-              
-              <div className="form-group">
-                <label>Email*</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={customerData.email}
-                  onChange={handleInputChange}
-                  required
-                  className={formErrors.email ? 'error' : ''}
-                  readOnly={!!customerData.email} // Hacerlo de solo lectura si ya tiene valor
-                />
-                {formErrors.email && <span className="error-message">{formErrors.email}</span>}
-              </div>
-              
-              <div className="form-group">
-                <label>Teléfono*</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={customerData.phone}
-                  onChange={handleInputChange}
-                  required
-                  className={formErrors.phone ? 'error' : ''}
-                  placeholder="Ej: 1123456789"
-                />
-                {formErrors.phone && <span className="error-message">{formErrors.phone}</span>}
-              </div>
-              
-              <div className="form-group">
-                <label>Dirección*</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={customerData.address}
-                  onChange={handleInputChange}
-                  required
-                  className={formErrors.address ? 'error' : ''}
-                />
-                {formErrors.address && <span className="error-message">{formErrors.address}</span>}
-              </div>
-              
-              <div className="form-group">
-                <label>Código Postal*</label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={customerData.zipCode}
-                  onChange={handleInputChange}
-                  required
-                  className={formErrors.zipCode ? 'error' : ''}
-                  placeholder="Ej: 1234"
-                />
-                {formErrors.zipCode && <span className="error-message">{formErrors.zipCode}</span>}
-              </div>
-              
-              <div className="form-actions">
-                <button 
-                  className="cancel-button"
-                  onClick={() => {
-                    setShowPaymentForm(false);
-                    setPaymentError(null);
-                  }}
-                  disabled={loading}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  className="confirm-button"
-                  onClick={handlePayment}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <span className="spinner"></span> Procesando...
-                    </>
-                  ) : (
-                    'Confirmar Pago'
-                  )}
-                </button>
-              </div>
-              
-              {paymentError && (
-                <div className="payment-error-message">
-                  <p>{paymentError}</p>
-                </div>
-              )}
+          <div className="summary-totals">
+            <div className="summary-row">
+              <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items):</span>
+              <span>${calculateSubtotal().toFixed(2)}</span>
             </div>
-          ) : (
-            <div className="cart-summary">
-              <div className="summary-row">
-                <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} productos):</span>
-                <span>${subtotal.toFixed(2)}</span>
+            
+            {coupon.discount > 0 && (
+              <div className="summary-row discount">
+                <span>Descuento ({coupon.discount * 100}%):</span>
+                <span>-${calculateDiscount().toFixed(2)}</span>
               </div>
+            )}
+            
+            <div className="summary-row total">
+              <span>Total:</span>
+              <span>${calculateTotal().toFixed(2)}</span>
+            </div>
+          </div>
+
+          {!showPaymentForm ? (
+            <button
+              className="checkout-btn"
+              onClick={() => setShowPaymentForm(true)}
+              disabled={loading}
+            >
+              {loading ? 'Cargando...' : 'Proceder al pago'}
+            </button>
+          ) : (
+            <div className="payment-section">
+              <h2>Información de Envío</h2>
               
-              {coupon.discount > 0 && (
-                <div className="summary-row discount">
-                  <span>Descuento ({coupon.discount * 100}%):</span>
-                  <span>-${discountAmount.toFixed(2)}</span>
+              <div className="customer-form">
+                <div className="form-group">
+                  <label>Nombre Completo*</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={customerData.name}
+                    onChange={handleInputChange}
+                    className={formErrors.name ? 'error' : ''}
+                  />
+                  {formErrors.name && <span className="error-message">{formErrors.name}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label>Email*</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={customerData.email}
+                    onChange={handleInputChange}
+                    className={formErrors.email ? 'error' : ''}
+                    readOnly={!!user?.email}
+                  />
+                  {formErrors.email && <span className="error-message">{formErrors.email}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label>Teléfono*</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={customerData.phone}
+                    onChange={handleInputChange}
+                    className={formErrors.phone ? 'error' : ''}
+                    placeholder="Ej: 1122334455"
+                  />
+                  {formErrors.phone && <span className="error-message">{formErrors.phone}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label>Dirección*</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={customerData.address}
+                    onChange={handleInputChange}
+                    className={formErrors.address ? 'error' : ''}
+                  />
+                  {formErrors.address && <span className="error-message">{formErrors.address}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label>Código Postal*</label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={customerData.zipCode}
+                    onChange={handleInputChange}
+                    className={formErrors.zipCode ? 'error' : ''}
+                  />
+                  {formErrors.zipCode && <span className="error-message">{formErrors.zipCode}</span>}
+                </div>
+              </div>
+
+              <div className="payment-methods">
+                <h2>Método de Pago</h2>
+                
+                {!paymentMethod ? (
+                  <div className="method-options">
+                    <button 
+                      className="method-btn card"
+                      onClick={() => setPaymentMethod('card')}
+                      disabled={loading}
+                    >
+                      <i className="fas fa-credit-card"></i> Tarjeta de Crédito/Débito
+                    </button>
+                    
+                    <button 
+                      className="method-btn mercadopago"
+                      onClick={handleRealMercadoPagoPayment}
+                      disabled={loading}
+                    >
+                      <img src="/mercadopago-icon.png" alt="MercadoPago" /> Pagar con MercadoPago
+                    </button>
+                    
+                    <button 
+                      className="back-btn"
+                      onClick={() => setShowPaymentForm(false)}
+                      disabled={loading}
+                    >
+                      Volver al carrito
+                    </button>
+                  </div>
+                ) : paymentMethod === 'card' ? (
+                  <CardPaymentForm 
+                    onSubmit={handleRealCardPayment}
+                    onCancel={() => setPaymentMethod(null)}
+                    loading={loading}
+                  />
+                ) : null}
+              </div>
+
+              {paymentError && (
+                <div className="payment-error">
+                  <p>{paymentError}</p>
+                  <button onClick={() => setPaymentError(null)}>Cerrar</button>
                 </div>
               )}
-              
-              <div className="summary-row total">
-                <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
-              
-              <button 
-                className="checkout-button"
-                onClick={() => setShowPaymentForm(true)}
-                disabled={cartItems.length === 0}
-              >
-                Proceder al Pago
-              </button>
-              
-              <a href="/products" className="continue-shopping">
-                Seguir comprando
-              </a>
             </div>
           )}
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
