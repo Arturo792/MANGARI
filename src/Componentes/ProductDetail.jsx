@@ -40,10 +40,10 @@ const ProductDetail = ({ addToCart }) => {
     return <div>El producto no existe.</div>;
   }
 
-  const handleBuyNow = () => {
+  /*const handleBuyNow = () => {
     // Lógica para comprar ahora
     console.log("Comprar ahora:", product);
-  };
+  };*/
 
   return (
     <div className="product-detail">

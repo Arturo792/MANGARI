@@ -18,12 +18,17 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate('/login'); // Redirige al usuario a la página de login después del registro
+      // Redirige al carrito con el cupón de bienvenida
+      navigate('/cart', { 
+        state: { 
+          couponCode: 'BIENVENIDO10',
+          newUser: true 
+        } 
+      });
     } catch (error) {
       setError(error.message);
     }
   };
-
   return (
     <div className="register-container">
       <button className="close-button" onClick={() => navigate('/')}>
