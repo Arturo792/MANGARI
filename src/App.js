@@ -15,13 +15,12 @@ import Nosotros from './admin/Nosotros';
 import Footer from './admin/Footer';
 import AdminPanel from './admin/adminPanel';
 import AdminNavbar from './admin/adminNavbar';
-import AddProduct from './admin/addProduct';
-import AdminProducts from './admin/adminProducts';
-import EditProduct from './admin/editProduct';
+import ProductManager from './admin/ProductManager';
 import AddAdmin from './admin/addAdmin';
 import EditProfile from './Componentes/editProfile';
 import Checkout from './admin/Checkout';
 import OrderConfirmation from './admin/orderConfirmation';
+import AdminPiedras from './admin/adminPiedras';
 import './App.css';
 
 const App = () => {
@@ -200,6 +199,7 @@ const App = () => {
 
       <main className="main-content">
         <Routes>
+          {/* Rutas públicas */}
           <Route path="/" element={<Navigate to="/Home" />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/products" element={<Products addToCart={addToCart} />} />
@@ -235,19 +235,23 @@ const App = () => {
           />
           <Route 
             path="/admin/products" 
-            element={user && isAdmin ? <AdminProducts /> : <Navigate to="/login" />} 
+            element={user && isAdmin ? <ProductManager mode="list" /> : <Navigate to="/login" />} 
           />
           <Route 
-            path="/admin/add-product" 
-            element={user && isAdmin ? <AddProduct /> : <Navigate to="/login" />} 
+            path="/admin/products/new" 
+            element={user && isAdmin ? <ProductManager mode="create" /> : <Navigate to="/login" />} 
           />
           <Route 
-            path="/admin/edit-product/:id" 
-            element={user && isAdmin ? <EditProduct /> : <Navigate to="/login" />} 
+            path="/admin/products/edit/:productId" 
+            element={user && isAdmin ? <ProductManager mode="edit" /> : <Navigate to="/login" />} 
           />
           <Route 
             path="/admin/add-admin" 
             element={user && isAdmin ? <AddAdmin /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/admin/piedras" 
+            element={user && isAdmin ? <AdminPiedras /> : <Navigate to="/login" />} 
           />
         </Routes>
       </main>

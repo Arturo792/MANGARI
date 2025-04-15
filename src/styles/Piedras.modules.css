@@ -1,0 +1,434 @@
+/* Estilos base */
+.piedras-usuario-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.usuario-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 1rem;
+}
+
+.usuario-header h1 {
+  font-size: 2.5rem;
+  color: #212121;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.header-subtitle {
+  color: #575757;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+}
+
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #BEAEA0;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error */
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.reload-button {
+  background: #575757;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.reload-button:hover {
+  background: #212121;
+}
+
+/* Cuando no hay piedras */
+.no-piedras-container {
+  text-align: center;
+  padding: 3rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.no-piedras-message {
+  color: #575757;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.no-piedras-suggestion {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* Grid de piedras */
+.piedras-mosaico {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+/* Tarjetas de piedra */
+.piedra-usuario-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.piedra-usuario-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.piedra-usuario-imagen {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+
+.piedra-usuario-imagen::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+}
+
+.piedra-usuario-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.piedra-usuario-card:hover .piedra-usuario-imagen img {
+  transform: scale(1.05);
+}
+
+.piedra-usuario-info {
+  padding: 1.5rem;
+}
+
+.piedra-nombre {
+  color: #212121;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.piedra-propiedad {
+  color: #575757;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.propiedad-label {
+  font-weight: 600;
+  margin-right: 0.3rem;
+  color: #212121;
+}
+
+.piedra-more-info {
+  color: #BEAEA0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  transition: color 0.3s;
+}
+
+.piedra-usuario-card:hover .piedra-more-info {
+  color: #575757;
+}
+
+/* Modal */
+.usuario-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.usuario-modal-content {
+  background: white;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.usuario-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #575757;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.usuario-modal-close:hover {
+  background: #212121;
+}
+
+.usuario-modal-close span {
+  position: relative;
+  top: -1px;
+}
+
+.usuario-modal-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.usuario-modal-imagen {
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.usuario-modal-imagen::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+}
+
+.usuario-modal-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.usuario-modal-detalles {
+  padding: 2rem;
+  overflow-y: auto;
+  max-height: calc(90vh - 300px);
+}
+
+.modal-piedra-nombre {
+  color: #212121;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.usuario-seccion {
+  margin-bottom: 2rem;
+}
+
+.seccion-titulo {
+  color: #575757;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seccion-contenido {
+  color: #212121;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .piedras-mosaico {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  
+  .usuario-header h1 {
+    font-size: 2rem;
+  }
+  
+  .usuario-modal-body {
+    flex-direction: column;
+  }
+  
+  .usuario-modal-imagen {
+    height: 250px;
+  }
+  
+  .usuario-modal-detalles {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .piedras-mosaico {
+    grid-template-columns: 1fr;
+  }
+  
+  .piedra-usuario-imagen {
+    height: 200px;
+  }
+  
+  .usuario-modal-imagen {
+    height: 200px;
+  }
+  
+  .modal-piedra-nombre {
+    font-size: 1.5rem;
+  }
+}
+
+/* Modal ajustado */
+.usuario-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+  max-height: 80vh;
+}
+
+.usuario-modal-imagen {
+  height: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+}
+
+.usuario-modal-imagen img {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.usuario-modal-detalles {
+  padding: 2rem;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+/* Estilos para las secciones de texto */
+.usuario-seccion {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #E2DBD5;
+}
+
+.usuario-seccion:last-child {
+  border-bottom: none;
+}
+
+.seccion-titulo {
+  color: #575757;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.seccion-contenido {
+  color: #212121;
+  line-height: 1.7;
+  padding-left: 1rem;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .usuario-modal-body {
+    grid-template-columns: 1fr;
+    max-height: 90vh;
+  }
+  
+  .usuario-modal-imagen {
+    height: 200px;
+    max-height: 30vh;
+  }
+  
+  .usuario-modal-detalles {
+    max-height: 60vh;
+  }
+}

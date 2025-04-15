@@ -131,3 +131,119 @@
   display: flex;
   align-items: center;
 }
+
+/* Agrega esto al final de tu Navbar.css */
+
+.coupon-container {
+  position: relative;
+  margin-right: 15px;
+}
+
+.coupon-bell {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+.coupon-alert {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+}
+
+.coupon-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  width: 250px;
+  z-index: 1001;
+  transform-origin: top right;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.coupon-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #212121;
+}
+
+.coupon-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.coupon-badge {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.coupon-details {
+  color: #333;
+  font-size: 14px;
+}
+
+.coupon-details p {
+  margin: 0 0 15px 0;
+}
+
+.coupon-details strong {
+  color: #4CAF50;
+}
+
+.coupon-button {
+  display: block;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.coupon-button:hover {
+  background-color: #3e8e41;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ajusta el navbar-icon para que sea consistente */
+.navbar-icon {
+  width: 30px;
+  height: 30px;
+  transition: filter 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-icon:hover {
+  filter: brightness(1.2);
+  transform: scale(1.1);
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from '../firebase';
-import '../styles/Products.Modules.css';
+import '../styles/Products.modules.css';
 
 const Products = ({ addToCart }) => {
   const [products, setProducts] = useState([]);

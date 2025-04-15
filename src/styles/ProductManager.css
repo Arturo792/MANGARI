@@ -1,0 +1,322 @@
+/* productManager.css */
+
+/* Estilos base */
+.product-list-container, .product-form-container, .success-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #212121;
+  }
+  
+  /* Encabezados */
+  .product-list-header h1, .product-form-container h1, .success-container h2 {
+    color: #212121;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid #CFC3B9;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Contenedor de lista de productos */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  /* Tarjetas de producto */
+  .product-card {
+    background: #E2DBD5;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #CFC3B9;
+  }
+  
+  .product-info {
+    padding: 1.2rem;
+  }
+  
+  .product-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: #212121;
+    font-size: 1.2rem;
+  }
+  
+  .product-info p {
+    margin: 0.3rem 0;
+    color: #575757;
+  }
+  
+  /* Acciones de producto */
+  .product-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #BEAEA0;
+    border-top: 1px solid #CFC3B9;
+  }
+  
+  .edit-button, .delete-button, .add-product-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .edit-button {
+    background-color: #575757;
+    color: white;
+  }
+  
+  .edit-button:hover {
+    background-color: #212121;
+  }
+  
+  .delete-button {
+    background-color: #c0392b;
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background-color: #e74c3c;
+  }
+  
+  .add-product-button {
+    background-color: #212121;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .add-product-button:hover {
+    background-color: #575757;
+  }
+  
+  /* Formulario */
+  .product-form-container form {
+    background: #E2DBD5;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #212121;
+    font-weight: 500;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #CFC3B9;
+    border-radius: 4px;
+    background: white;
+    font-size: 1rem;
+  }
+  
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #575757;
+    box-shadow: 0 0 0 2px rgba(87, 87, 87, 0.2);
+  }
+  
+  /* Controles de stock */
+  .stock-controls {
+    display: flex;
+    align-items: center;
+  }
+  
+  .stock-controls input {
+    width: 60px;
+    text-align: center;
+    margin: 0 0.5rem;
+  }
+  
+  .stock-controls button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: #575757;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .stock-controls button:hover {
+    background: #212121;
+  }
+  
+  /* Vista previa de imagen */
+  .image-preview {
+    margin-top: 1rem;
+  }
+  
+  .image-preview img {
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid #CFC3B9;
+    border-radius: 4px;
+  }
+  
+  /* Acciones del formulario */
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  .cancel-button, .submit-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .cancel-button {
+    background-color: #CFC3B9;
+    color: #212121;
+  }
+  
+  .cancel-button:hover {
+    background-color: #BEAEA0;
+  }
+  
+  .submit-button {
+    background-color: #212121;
+    color: white;
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #575757;
+  }
+  
+  .submit-button:disabled {
+    background-color: #CFC3B9;
+    cursor: not-allowed;
+  }
+  
+  /* Mensajes de éxito */
+  .success-container {
+    text-align: center;
+    background: #E2DBD5;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn.primary {
+    background-color: #212121;
+    color: white;
+  }
+  
+  .btn.primary:hover {
+    background-color: #575757;
+  }
+  
+  .btn.secondary {
+    background-color: #BEAEA0;
+    color: #212121;
+  }
+  
+  .btn.secondary:hover {
+    background-color: #CFC3B9;
+  }
+  
+  /* Estados de carga y error */
+  .loading, .error, .no-products {
+    text-align: center;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+  }
+  
+  .loading {
+    background-color: #E2DBD5;
+    color: #575757;
+  }
+  
+  .error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+  }
+  
+  .no-products {
+    background-color: #E2DBD5;
+    color: #575757;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    
+    .product-list-container, .product-form-container, .success-container {
+      padding: 1rem;
+    }
+    
+    .form-actions, .success-actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .btn, .cancel-button, .submit-button {
+      width: 100%;
+    }
+  }

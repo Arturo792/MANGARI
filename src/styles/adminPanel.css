@@ -1,57 +1,107 @@
 .admin-container {
-  max-width: 800px; /* Aumentamos el ancho máximo */
+  max-width: 800px;
   margin: 0 auto;
-  padding: 40px; /* Más espacio interno */
+  padding: 40px;
   text-align: center;
-  background-color: #FFFFFF; /* Fondo blanco */
+  background-color: #FFFFFF;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .admin-container h1 {
   font-size: 28px;
-  color: #212121; /* Color de texto oscuro */
-  margin-bottom: 30px; /* Más espacio debajo del título */
+  color: #212121;
+  margin-bottom: 30px;
 }
 
 .logout-button {
-  padding: 12px 24px; /* Botón más grande */
-  background-color: #CFC3B9; /* Color terciario de la paleta */
-  color: #212121; /* Color de texto oscuro */
+  padding: 12px 24px;
+  background-color: #CFC3B9;
+  color: #212121;
   border: none;
   cursor: pointer;
   border-radius: 4px;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  margin-bottom: 30px; /* Más espacio debajo del botón */
+  margin-bottom: 30px;
 }
 
 .logout-button:hover {
-  background-color: #BEAEA0; /* Color primario de la paleta */
+  background-color: #BEAEA0;
 }
 
-.admin-options {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* Espacio entre los botones */
+.coupon-form {
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  margin-top: 20px;
 }
 
-.admin-options button {
-  padding: 15px 30px; /* Botones más grandes */
-  background-color: #BEAEA0; /* Color primario de la paleta */
-  color: #212121; /* Color de texto oscuro */
-  border: none;
-  cursor: pointer;
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #212121;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
-  transition: background-color 0.3s ease;
 }
 
-.admin-options button:hover {
-  background-color: #E2DBD5; /* Color secundario de la paleta */
-}
-
-.error-message {
-  color: #575757; /* Color de texto gris */
+.submit-btn, .remove-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   margin-top: 10px;
+}
+
+.submit-btn {
+  background-color: #BEAEA0;
+  color: #212121;
+}
+
+.submit-btn:hover {
+  background-color: #E2DBD5;
+}
+
+.remove-btn {
+  background-color: #d9534f;
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: #c9302c;
+}
+
+.current-coupon {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  border-left: 4px solid #4CAF50;
+  text-align: left;
+}
+
+.current-coupon h3 {
+  margin-top: 0;
+  color: #212121;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #575757;
 }

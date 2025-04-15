@@ -1,0 +1,687 @@
+/* adminPiedras.modules.css */
+
+/* Estilos base con personalidad */
+.admin-piedras-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
+  color: #212121;
+  background: linear-gradient(to bottom, #f9f7f5 0%, #E2DBD5 100%);
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  color: #212121;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  padding-bottom: 1.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 4px;
+  background: linear-gradient(to right, #BEAEA0, #575757, #BEAEA0);
+  border-radius: 2px;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-top: 4rem;
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #BEAEA0, transparent);
+}
+
+/* Formulario de lujo */
+.piedra-form {
+  background-color: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 4rem;
+  border: 1px solid rgba(190, 174, 160, 0.3);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.piedra-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  color: #575757;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 2px solid #E2DBD5;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s;
+  background-color: #f9f9f9;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #BEAEA0;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(190, 174, 160, 0.2);
+}
+
+.form-group textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+/* Diseño premium para el input de archivo */
+/* Diseño del botón de archivo VIP */
+.file-input-container {
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.8rem;
+  background: linear-gradient(145deg, #f8f8f8, #E2DBD5);
+  border-radius: 10px;
+  border: 2px dashed #BEAEA0;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.file-input-label:hover {
+  background: linear-gradient(145deg, #E2DBD5, #CFC3B9);
+  border-color: #575757;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.file-input-label:active {
+  transform: translateY(0);
+}
+
+.file-input-text {
+  font-weight: 600;
+  color: #575757;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.file-input-text svg {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  fill: #575757;
+}
+
+.file-input-button {
+  background: linear-gradient(to right, #575757, #212121);
+  color: white;
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.file-input-button svg {
+  margin-left: 8px;
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+.file-input-label:hover .file-input-button {
+  background: linear-gradient(to right, #212121, #000);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto de onda al hacer clic */
+.file-input-label::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(190, 174, 160, 0.3);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.file-input-label:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+
+/* Estado cuando hay archivo seleccionado */
+.file-input-label.has-file {
+  border-color: #575757;
+  background: linear-gradient(145deg, #E2DBD5, #CFC3B9);
+}
+
+.file-input-label.has-file .file-input-text {
+  color: #212121;
+  font-weight: 700;
+}
+
+/* Preview de imagen con estilo */
+.image-preview-container {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.image-preview {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 8px;
+  border: 2px solid #E2DBD5;
+  object-fit: cover;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s ease;
+}
+
+.image-preview:hover {
+  transform: scale(1.03);
+}
+
+/* Botones que dan placer visual */
+.form-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.btn, .submit-btn, .cancel-btn, .edit-btn, .delete-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn {
+  background: linear-gradient(to right, #575757, #212121);
+  color: white;
+  box-shadow: 0 4px 15px rgba(33, 33, 33, 0.2);
+}
+
+.submit-btn:hover {
+  background: linear-gradient(to right, #212121, #000);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 33, 33, 0.3);
+}
+
+.submit-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.submit-btn:hover::after {
+  left: 100%;
+}
+
+.cancel-btn {
+  background-color: white;
+  color: #575757;
+  border: 2px solid #CFC3B9;
+}
+
+.cancel-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #575757;
+}
+
+/* Galería de piedras que enamora */
+.piedras-list {
+  margin-top: 4rem;
+}
+
+.piedras-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+.piedra-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
+
+.piedra-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(190, 174, 160, 0.1), transparent);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.piedra-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.piedra-image-container {
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.piedra-image-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent);
+}
+
+.piedra-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.piedra-card:hover .piedra-image-container img {
+  transform: scale(1.1);
+}
+
+.piedra-info {
+  padding: 1.8rem;
+  position: relative;
+  z-index: 2;
+}
+
+.piedra-info h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #212121;
+  position: relative;
+  display: inline-block;
+}
+
+.piedra-info h3::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: #BEAEA0;
+}
+
+.piedra-info p {
+  margin: 0.5rem 0;
+  color: #575757;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.piedra-info p strong {
+  color: #212121;
+}
+
+.piedra-actions {
+  display: flex;
+  border-top: 1px solid #f0f0f0;
+}
+
+.edit-btn, .delete-btn {
+  flex: 1;
+  padding: 1rem;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.edit-btn {
+  background-color: #f5f5f5;
+  color: #575757;
+  border-right: 1px solid #f0f0f0;
+}
+
+.edit-btn:hover {
+  background-color: #BEAEA0;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #f5f5f5;
+  color: #575757;
+}
+
+.delete-btn:hover {
+  background-color: #575757;
+  color: white;
+}
+
+/* Mensajes con estilo */
+.error-message {
+  background-color: #fff0f0;
+  color: #d32f2f;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 5px solid #d32f2f;
+  box-shadow: 0 3px 10px rgba(211, 47, 47, 0.1);
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #575757;
+  font-style: italic;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.loading::after {
+  content: '...';
+  position: absolute;
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* Pantalla de éxito cinematográfica */
+.success-container {
+  max-width: 700px;
+  margin: 5rem auto;
+  padding: 3rem;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease;
+  border: 1px solid rgba(190, 174, 160, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.success-container h2 {
+  color: #575757;
+  margin-bottom: 2.5rem;
+  font-size: 2.2rem;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.btn {
+  min-width: 180px;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.4s ease;
+}
+
+.btn.primary {
+  background: linear-gradient(to right, #575757, #212121);
+  color: white;
+  box-shadow: 0 4px 15px rgba(33, 33, 33, 0.2);
+}
+
+.btn.primary:hover {
+  background: linear-gradient(to right, #212121, #000);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(33, 33, 33, 0.3);
+}
+
+.btn.secondary {
+  background-color: white;
+  color: #575757;
+  border: 2px solid #BEAEA0;
+}
+
+.btn.secondary:hover {
+  background-color: #BEAEA0;
+  color: white;
+  border-color: #575757;
+}
+
+/* Responsive con amor */
+@media (max-width: 992px) {
+  .admin-piedras-container {
+    padding: 2rem 1.5rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  .piedra-form {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  .piedras-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .form-actions, .success-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .piedra-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-piedras-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .piedra-form {
+    padding: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Estilos para el file upload personalizado */
+.custom-file-upload {
+  margin-top: 0.5rem;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none; /* Oculta el input nativo */
+}
+
+.custom-file-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #575757, #212121);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.custom-file-button:hover {
+  background: linear-gradient(135deg, #212121, #000);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-file-button:active {
+  transform: translateY(0);
+}
+
+.icon-container {
+  margin-right: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.upload-icon {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+.button-text {
+  pointer-events: none; /* Evita que el texto interfiera con el click */
+}
+
+.file-name {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #575757;
+  font-style: italic;
+  padding-left: 0.3rem;
+}
+
+/* Estilos para el preview de imagen (ya existentes) */
+.image-preview-container {
+  margin-top: 1.5rem;
+}
+
+.custom-file-button.icon-only {
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+}
+
+.custom-file-button.icon-only .upload-icon {
+  width: 18px;
+  height: 18px;
+}

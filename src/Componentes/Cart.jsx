@@ -37,7 +37,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
         const querySnapshot = await getDocs(collection(db, "products"));
         const products = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          title: doc.data().title || 'Producto sin nombre',
+          title: doc.data().name || doc.data().title || 'Producto sin nombre', // Busca ambos campos
           price: Number(doc.data().price) || 0,
           image: doc.data().image || '/placeholder-product.jpg',
           stock: Number(doc.data().stock) || 0
@@ -47,6 +47,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
         console.error("Error cargando productos:", error);
       }
     };
+
     loadProducts();
   }, []);
 
@@ -484,13 +485,6 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
                 
                 {!paymentMethod ? (
                   <div className="method-options">
-                    <button 
-                      className="method-btn card"
-                      onClick={() => setPaymentMethod('card')}
-                      disabled={loading}
-                    >
-                      <i className="fas fa-credit-card"></i> Tarjeta de Crédito/Débito
-                    </button>
                     
                     <button 
                       className="method-btn mercadopago"
