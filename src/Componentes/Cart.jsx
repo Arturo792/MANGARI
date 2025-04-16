@@ -72,7 +72,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
   const handleApplyCoupon = useCallback((code = coupon.code) => {
     const upperCode = code.toUpperCase().trim();
     
-    if (upperCode === 'BIENVENIDO10') {
+    if (upperCode === 'CUPON1') {
       setCoupon({
         code: upperCode,
         discount: 0.1,
@@ -154,27 +154,30 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
       setPaymentError('Completa todos los campos correctamente');
       return;
     }
-
+  
     setLoading(true);
     setPaymentError(null);
-    
+  
     try {
       // Validar items contra la base de datos
       const validItems = cartItems.map(item => {
         const dbProduct = productsFromDB.find(p => p.id === item.id);
+        const basePrice = dbProduct?.price || item.price;
+        const discountedPrice = basePrice * (1 - coupon.discount);
+  
         return {
           id: item.id,
           title: dbProduct?.title || item.title,
-          unit_price: dbProduct?.price || item.price,
+          unit_price: Number(discountedPrice.toFixed(2)), // aplica descuento aquí
           quantity: item.quantity,
           picture_url: dbProduct?.image || item.image
         };
       }).filter(item => item.title && item.unit_price > 0);
-
+  
       if (validItems.length !== cartItems.length) {
         throw new Error('Algunos productos no están disponibles');
       }
-
+  
       const response = await fetch(`${API_URL}/create-preference`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -192,15 +195,15 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
           metadata: { userId: user?.id || 'guest' }
         })
       });
-
+  
       const data = await response.json();
-      
+  
       if (!response.ok) {
         throw new Error(data.error || 'Error al crear el pago');
       }
-
+  
       window.location.href = data.sandbox_init_point;
-      
+  
     } catch (error) {
       console.error('Error:', error);
       setPaymentError(error.message);
@@ -208,6 +211,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
       setLoading(false);
     }
   };
+  
 
   const handleRealCardPayment = async (cardData) => {
     if (!validateForm()) {
@@ -267,7 +271,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
             items: cartItems,
             customer: customerData,
             paymentMethod: 'Tarjeta',
-            total: calculateTotal(),
+            total: calculateTotal().toFixed(2),
             paymentData: data
           }
         }
@@ -504,7 +508,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
                   </div>
                 ) : paymentMethod === 'card' ? (
                   <CardPaymentForm 
-                    onSubmit={handleRealCardPayment}
+                    onSubmit={handleRealCardPayment()}
                     onCancel={() => setPaymentMethod(null)}
                     loading={loading}
                   />
