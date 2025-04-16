@@ -267,3 +267,6 @@ app.listen(PORT, () => {
   console.log(`Configurado para FRONTEND: ${FRONTEND_URL}`);
   console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
 });
+
+
+//Prueba de seguridad 4
