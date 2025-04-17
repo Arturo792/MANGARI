@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase'; // Asegúrate que la ruta sea correcta
+import { db } from '../firebase';
 import '../styles/Cart.modules.css';
 import CardPaymentForm from './CardPaymentForm';
 
@@ -37,7 +37,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
         const querySnapshot = await getDocs(collection(db, "products"));
         const products = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          title: doc.data().name || doc.data().title || 'Producto sin nombre', // Busca ambos campos
+          title: doc.data().name || doc.data().title || 'Producto sin nombre',
           price: Number(doc.data().price) || 0,
           image: doc.data().image || '/placeholder-product.jpg',
           stock: Number(doc.data().stock) || 0
@@ -108,7 +108,6 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     const newQuantity = item.quantity + change;
     if (newQuantity < 1) return;
 
-    // Verificar stock contra la base de datos
     const dbProduct = productsFromDB.find(p => p.id === id);
     if (dbProduct && newQuantity > dbProduct.stock) {
       setPaymentError(`No hay suficiente stock para ${item.title}`);
@@ -159,7 +158,9 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     setPaymentError(null);
   
     try {
-      // Validar items contra la base de datos
+      const subtotal = calculateSubtotal() - calculateDiscount();
+      const shippingCost = calculateShipping();
+  
       const validItems = cartItems.map(item => {
         const dbProduct = productsFromDB.find(p => p.id === item.id);
         const basePrice = dbProduct?.price || item.price;
@@ -168,7 +169,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
         return {
           id: item.id,
           title: dbProduct?.title || item.title,
-          unit_price: Number(discountedPrice.toFixed(2)), // aplica descuento aquí
+          unit_price: Number(discountedPrice.toFixed(2)),
           quantity: item.quantity,
           picture_url: dbProduct?.image || item.image
         };
@@ -176,6 +177,16 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
   
       if (validItems.length !== cartItems.length) {
         throw new Error('Algunos productos no están disponibles');
+      }
+  
+      if (shippingCost > 0) {
+        validItems.push({
+          id: 'shipping',
+          title: 'Costo de envío',
+          unit_price: shippingCost,
+          quantity: 1,
+          picture_url: ''
+        });
       }
   
       const response = await fetch(`${API_URL}/create-preference`, {
@@ -192,7 +203,18 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
               zip_code: customerData.zipCode
             }
           },
-          metadata: { userId: user?.id || 'guest' }
+          shipments: {
+            cost: shippingCost,
+            free_shipping: shippingCost === 0
+          },
+          metadata: { 
+            userId: user?.id || 'guest',
+            coupon: coupon.code || 'none',
+            discount: coupon.discount,
+            shippingCost,
+            subtotal: subtotal.toFixed(2),
+            total: (subtotal + shippingCost).toFixed(2)
+          }
         })
       });
   
@@ -211,7 +233,6 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
       setLoading(false);
     }
   };
-  
 
   const handleRealCardPayment = async (cardData) => {
     if (!validateForm()) {
@@ -223,7 +244,6 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     setPaymentError(null);
     
     try {
-      // Validar items contra la base de datos
       const validItems = cartItems.map(item => {
         const dbProduct = productsFromDB.find(p => p.id === item.id);
         if (!dbProduct || item.quantity > dbProduct.stock) {
@@ -285,9 +305,14 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   };
 
+  // Funciones de cálculo
   const calculateSubtotal = () => cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const calculateDiscount = () => calculateSubtotal() * coupon.discount;
-  const calculateTotal = () => calculateSubtotal() - calculateDiscount();
+  const calculateShipping = () => {
+    const subtotalAfterDiscount = calculateSubtotal() - calculateDiscount();
+    return subtotalAfterDiscount < 300 ? 100 : 0;
+  };
+  const calculateTotal = () => (calculateSubtotal() - calculateDiscount()) + calculateShipping();
 
   if (cartItems.length === 0) {
     return (
@@ -402,7 +427,23 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
               </div>
             )}
             
-            <div className="summary-row total">
+            <div className={`summary-row shipping ${calculateShipping() === 0 ? 'free' : 'paid'}`}>
+              <span>
+                Envío:
+                {calculateShipping() === 0 && (
+                  <span className="free-shipping-badge">¡Gratis!</span>
+                )}
+              </span>
+              <span>
+                {calculateShipping() === 0 ? (
+                  <span className="free-shipping-text">$0.00</span>
+                ) : (
+                  <span className="paid-shipping-text">${calculateShipping().toFixed(2)}</span>
+                )}
+              </span>
+            </div>
+            
+            <div className={`summary-row total ${calculateShipping() === 0 ? 'free-shipping-total' : ''}`}>
               <span>Total:</span>
               <span>${calculateTotal().toFixed(2)}</span>
             </div>
@@ -489,7 +530,6 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
                 
                 {!paymentMethod ? (
                   <div className="method-options">
-                    
                     <button 
                       className="method-btn mercadopago"
                       onClick={handleRealMercadoPagoPayment}
@@ -508,7 +548,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
                   </div>
                 ) : paymentMethod === 'card' ? (
                   <CardPaymentForm 
-                    onSubmit={handleRealCardPayment()}
+                    onSubmit={handleRealCardPayment}
                     onCancel={() => setPaymentMethod(null)}
                     loading={loading}
                   />

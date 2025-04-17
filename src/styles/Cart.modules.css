@@ -446,3 +446,93 @@
   transform: translateY(0);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.summary-row.shipping {
+  padding: 0.75rem 0;
+  margin: 0.75rem 0;
+  border-top: 1px dashed #E2DBD5;
+  border-bottom: 1px dashed #E2DBD5;
+}
+
+.summary-row.shipping span:last-child {
+  font-weight: bold;
+  color: #2e7d32; /* Verde para envío gratis */
+}
+
+.summary-row.shipping.paid span:last-child {
+  color: #d32f2f; /* Rojo para envío con costo */
+}
+
+/* Estilo para cuando el envío es gratis */
+.shipping-free {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+/* Estilo para cuando tiene costo */
+.shipping-cost {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* Animación para destacar el cambio de envío */
+@keyframes highlightShipping {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.shipping-highlight {
+  animation: highlightShipping 0.5s ease;
+}
+
+/* Estilos responsivos para la sección de envío */
+@media (max-width: 768px) {
+  .summary-row.shipping {
+    padding: 0.5rem 0;
+    margin: 0.5rem 0;
+  }
+}
+
+/* Añade transición suave para cambios de precio */
+.summary-row {
+  transition: all 0.3s ease;
+}
+
+/* Mejora visual para el total cuando hay envío gratis */
+.summary-row.total.free-shipping {
+  color: #2e7d32;
+}
+
+/* Estilo para el tooltip de envío gratuito */
+.shipping-info-tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.5rem;
+  cursor: help;
+}
+
+.shipping-info-tooltip::after {
+  content: "¡Envío gratis en compras mayores a $300!";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #212121;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  width: 200px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.shipping-info-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  bottom: calc(100% + 5px);
+}
