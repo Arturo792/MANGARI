@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
+import { reducirStock } from "./stock";
 import { db } from '../firebase';
 import '../styles/Cart.modules.css';
 import CardPaymentForm from './CardPaymentForm';
@@ -148,12 +149,18 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   };
 
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
+
   const handleRealMercadoPagoPayment = async () => {
     if (!validateForm()) {
       setPaymentError('Completa todos los campos correctamente');
       return;
     }
-  
+
     setLoading(true);
     setPaymentError(null);
   
@@ -214,7 +221,13 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
             shippingCost,
             subtotal: subtotal.toFixed(2),
             total: (subtotal + shippingCost).toFixed(2)
-          }
+          },
+          back_urls: {
+            success: "http://localhost:3000/order-confirmation",
+            failure: `${window.location.origin}/cart`,
+            pending: `${window.location.origin}/cart`
+          },
+          auto_return: 'approved'
         })
       });
   
@@ -234,11 +247,15 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   };
 
+  
+
   const handleRealCardPayment = async (cardData) => {
     if (!validateForm()) {
       setPaymentError('Completa todos los campos correctamente');
       return;
     }
+
+
 
     setLoading(true);
     setPaymentError(null);

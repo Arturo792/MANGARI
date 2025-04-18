@@ -19,8 +19,9 @@ import ProductManager from './admin/ProductManager';
 import AddAdmin from './admin/addAdmin';
 import EditProfile from './Componentes/editProfile';
 import Checkout from './admin/Checkout';
-import OrderConfirmation from './admin/orderConfirmation';
+import OrderConfirmation from './Componentes/orderConfirmation';
 import AdminPiedras from './admin/adminPiedras';
+import PagoExitoso from './Componentes/successPayment';
 import './App.css';
 
 const App = () => {
@@ -226,7 +227,7 @@ const App = () => {
           />
           <Route path="/edit-profile" element={<EditProfile user={user} />} />
           <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
-          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/pago-exitoso" element={<PagoExitoso />} />
           
           {/* Rutas de administrador */}
           <Route 
