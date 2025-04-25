@@ -1,142 +1,139 @@
+/* Navbar Elegante - Manteniendo la paleta de colores original */
 .navbar {
   background-color: #212121;
-  padding: 1rem;
+  padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  width: 100%;
   height: 80px;
   z-index: 1000;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navbar-brand {
+  color: #fff !important;
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+}
+
+.navbar-brand:hover {
+  color: #d4a373;
+  transform: translateY(-2px);
+}
+
+.navbar-logo {
+  width: 45px;
+  height: 45px;
+  margin-right: 12px;
+  transition: transform 0.4s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.navbar-brand:hover .navbar-logo {
+  transform: rotate(15deg) scale(1.1);
 }
 
 .navbar-links {
   display: flex;
-  gap: 20px;
-  align-items: center;
+  gap: 2rem;
+  margin-left: 3rem;
 }
 
 .nav-link {
   color: #ffffff !important;
   text-decoration: none;
   font-size: 1.1rem;
-  transition: color 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+  position: relative;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #d4a373;
+  transition: width 0.3s ease;
 }
 
 .nav-link:hover {
   color: #d4a373;
-  transform: scale(1.05);
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .navbar-actions {
   display: flex;
-  gap: 20px;
   align-items: center;
+  gap: 1.5rem;
 }
-
-.main-content {
-  margin-top: 80px;
-}
-
-.navbar .navbar-brand {
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  gap: 10px;
-}
-
-.navbar .navbar-brand:hover {
-  color: #d4a373;
-}
-
-.navbar .navbar-brand img {
-  width: 40px;
-  height: 40px;
-  margin-left: 20px;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.navbar .navbar-brand img:hover {
-  transform: scale(1.1);
-}
-
-.navbar .login-link {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.1rem;
-  cursor: pointer;
-  margin-right: 20px;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.navbar .login-link:hover {
-  color: #d4a373;
-  transform: scale(1.05);
-}
-
-.navbar .theme-toggle-button:hover {
-  background-color: #a6764e;
-  transform: scale(1.05);
-}
-
-.navbar .cart-link {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.5rem;
-  position: relative;
-  margin-right: 20px;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.navbar .cart-link:hover {
-  color: #d4a373;
-  transform: scale(1.1);
-}
-
-.navbar .cart-count {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  color: #fff;
-  border-radius: 50%;
-  padding: 4px 8px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  min-width: 20px;
-  text-align: center;
-  line-height: 1;
-}
-
 
 .navbar-icon {
-  width: 50px; 
-  height: 50px;
-  transition: filter 0.3s ease, transform 0.2s ease;
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  filter: brightness(0) invert(1);
 }
 
-
-
-/* Ajustes para el contenedor de los iconos */
-.navbar-actions .login-link,
-.navbar-actions .cart-link {
+.login-link, .cart-link {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-/* Agrega esto al final de tu Navbar.css */
+.login-link:hover, .cart-link:hover {
+  background-color: rgba(212, 163, 115, 0.1);
+  transform: translateY(-2px);
+}
 
+.login-link:hover .navbar-icon, 
+.cart-link:hover .navbar-icon {
+  filter: brightness(0) invert(0.8) sepia(1) hue-rotate(-10deg) saturate(5);
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #d4a373;
+  color: #212121;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Estilos mejorados para el cupón */
 .coupon-container {
   position: relative;
-  margin-right: 15px;
+  margin-right: 0.5rem;
 }
 
 .coupon-bell {
@@ -144,106 +141,129 @@
   border: none;
   cursor: pointer;
   position: relative;
-  padding: 0;
-  margin: 0;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.coupon-bell:hover {
+  background-color: rgba(212, 163, 115, 0.1);
 }
 
 .coupon-alert {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 3px;
+  right: 3px;
   background-color: #ff4757;
   color: white;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 0.7rem;
   font-weight: bold;
-  animation: pulse 1.5s infinite;
+  animation: pulse 2s infinite;
 }
 
 .coupon-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   right: 0;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 15px;
-  width: 250px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 1.25rem;
+  width: 280px;
   z-index: 1001;
-  transform-origin: top right;
-  animation: fadeIn 0.3s ease-out;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.coupon-container:hover .coupon-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
 }
 
 .coupon-header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  color: #212121;
+  margin-bottom: 1rem;
+}
+
+.coupon-badge {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+  color: #d4a373;
 }
 
 .coupon-header h4 {
   margin: 0;
-  font-size: 16px;
-}
-
-.coupon-badge {
-  margin-right: 10px;
-  font-size: 20px;
+  color: #212121;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .coupon-details {
-  color: #333;
-  font-size: 14px;
-}
-
-.coupon-details p {
-  margin: 0 0 15px 0;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
 }
 
 .coupon-details strong {
-  color: #4CAF50;
+  color: #d4a373;
+  font-weight: 600;
 }
 
 .coupon-button {
   display: block;
-  background-color: #4CAF50;
-  color: white;
+  background-color: #d4a373;
+  color: #212121;
   text-align: center;
-  padding: 8px 0;
-  border-radius: 4px;
+  padding: 0.6rem;
+  border-radius: 6px;
   text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .coupon-button:hover {
-  background-color: #3e8e41;
+  background-color: #c1915e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(212, 163, 115, 0.3);
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Ajusta el navbar-icon para que sea consistente */
+/* Efecto de hover más suave para los iconos */
 .navbar-icon {
-  width: 30px;
-  height: 30px;
-  transition: filter 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.navbar-icon:hover {
-  filter: brightness(1.2);
-  transform: scale(1.1);
+/* Responsive (opcional) */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 1.5rem;
+  }
+  
+  .navbar-links {
+    gap: 1.5rem;
+    margin-left: 2rem;
+  }
 }

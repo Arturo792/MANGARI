@@ -6,9 +6,10 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import mangariLogo from '../img/mangari-home.png';
-import cuarzoHero from '../img/cuarzo rosa piedra.png';
+import cuarzoHero from '../img/cuarzo rosa.jpg';
 import gargantilla from '../img/IMG_5013.jpeg';
 import '../styles/Home.css';
+ 
 
 const Home = () => {
   const navigate = useNavigate();
@@ -108,24 +109,29 @@ const Home = () => {
     <div className="mangari-home">
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-image-container">
-          <img src={cuarzoHero} alt="Cuarzo natural" className="hero-image" />
-          <div className="hero-overlay"></div>
-        </div>
-        <div className="hero-content">
-          <img src={mangariLogo} alt="Mangari" className="hero-logo" />
-          <h1 className="hero-title">JOYERÍA ENERGÉTICA</h1>
-          <p className="hero-subtitle">Donde la naturaleza y la elegancia se encuentran</p>
-          <div className="hero-cta">
-            <button className="cta-button" onClick={() => navigate('/piedras')}>
-              EXPLORA LAS PIEDRAS
-            </button>
-            <button className="cta-button secondary" onClick={() => navigate('/products')}>
-              VER COLECCIÓN
-            </button>
-          </div>
-        </div>
-      </section>
+  <div className="hero-image-container">
+    <img src={cuarzoHero} alt="Cuarzo natural" className="hero-image" />
+    <div className="hero-overlay"></div>
+  </div>
+  
+  <div className="hero-content-container">
+    <div className="hero-content">
+      <img src={mangariLogo} alt="Mangari" className="hero-logo" />
+      
+      <h1 className="hero-title">JOYERÍA ENERGÉTICA</h1>
+      <p className="hero-subtitle">Donde la naturaleza y la elegancia se encuentran</p>
+      
+      <div className="hero-cta">
+        <button className="cta-button" onClick={() => navigate('/piedras')}>
+          EXPLORA LAS PIEDRAS
+        </button>
+        <button className="cta-button secondary" onClick={() => navigate('/products')}>
+          VER COLECCIÓN
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
     {/* About Section */}
 <section className="about-section">
@@ -151,6 +157,7 @@ const Home = () => {
     </div>
   </div>
 </section>
+br
 
       {/* Featured Products */}
       <section className="featured-section">
