@@ -10,8 +10,24 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 const MP_API_URL = 'https://api.mercadopago.com';
 
+const allowedOrigins = [
+  FRONTEND_URL, // http://localhost:3000
+  'http://localhost:3000' // la URL que te da ngrok
+];
 // Middlewares
-app.use(cors({ origin: FRONTEND_URL }));
+app.use(cors({
+  origin: function(origin, callback) {
+    // Permite peticiones sin origen (Postman, curl, etc)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `El CORS no está permitido para el origen: ${origin}`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 app.use(express.json());
 
 // Validación de items
@@ -49,7 +65,7 @@ const getMPHeaders = () => ({
 // Ruta para crear preferencia de MercadoPago (redirección)
 app.post('/create-preference', async (req, res) => {
   try {
-    const { items, payer, metadata } = req.body;
+    const { items, payer, metadata, back_urls } = req.body;
 
     if (!validateItems(items)) {
       return res.status(400).json({ error: 'Items inválidos' });
@@ -81,7 +97,7 @@ app.post('/create-preference', async (req, res) => {
           street_number: 'N/A' // MP requiere street_number
         }
       },
-      back_urls: {
+      back_urls: req.body.back_urls || {
         success: `${FRONTEND_URL}/pago-exitoso`,
         failure: `${FRONTEND_URL}/pago-fallido`,
         pending: `${FRONTEND_URL}/pago-pendiente`
@@ -261,11 +277,26 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Error interno del servidor' });
 });
 
+// Ruta para recibir notificaciones (webhook) de Mercado Pago
+app.post('/webhook', (req, res) => {
+  console.log('🔔 Notificación recibida de Mercado Pago:', req.body);
+
+  // Aquí puedes procesar la notificación para actualizar el estado en tu BD, enviar emails, etc.
+  // Por ejemplo:
+  // const topic = req.body.type; // 'payment', 'merchant_order', etc.
+  // const paymentId = req.body.data?.id;
+
+  // Responder con status 200 para confirmar recepción
+  res.status(200).send('Webhook recibido correctamente');
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor listo en http://localhost:${PORT}`);
   console.log(`Configurado para FRONTEND: ${FRONTEND_URL}`);
   console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Permitiendo CORS para: ${allowedOrigins.join(', ')}`);
 });
 
 

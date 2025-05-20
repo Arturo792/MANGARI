@@ -19,7 +19,6 @@ import ProductManager from './admin/ProductManager';
 import AddAdmin from './admin/addAdmin';
 import EditProfile from './Componentes/editProfile';
 import Checkout from './admin/Checkout';
-import OrderConfirmation from './Componentes/orderConfirmation';
 import AdminPiedras from './admin/adminPiedras';
 import PagoExitoso from './Componentes/successPayment';
 import './App.css';
@@ -94,7 +93,6 @@ const App = () => {
 
   useEffect(() => {
     cleanCorruptedCartData();
-
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log("Usuario autenticado:", user.email);
@@ -227,7 +225,7 @@ const App = () => {
           />
           <Route path="/edit-profile" element={<EditProfile user={user} />} />
           <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
-          <Route path="/pago-exitoso" element={<PagoExitoso />} />
+          <Route path="/pago-exitoso" element={<PagoExitoso cartItems={cartItems} setCartItems={setCartItems} />} />
           
           {/* Rutas de administrador */}
           <Route 

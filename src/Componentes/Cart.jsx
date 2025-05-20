@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
-import { reducirStock } from "./stock";
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import '../styles/Cart.modules.css';
 import CardPaymentForm from './CardPaymentForm';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const FRONT_END = process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000';
 
 const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user }) => {
   const navigate = useNavigate();
@@ -51,6 +52,32 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
 
     loadProducts();
   }, []);
+
+  useEffect(() => {
+  const loadUserDoc = async () => {
+    if (user?.uid) {
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const data = userDocSnap.data();
+          setCustomerData(prev => ({
+            ...prev,
+            name: data.name || prev.name,
+            email: data.email || prev.email,
+            phone: data.phone || prev.phone,
+            address: data.address || prev.address,
+            zipCode: data.zipCode || prev.zipCode
+          }));
+        }
+      } catch (error) {
+        console.error('Error al obtener datos del usuario desde Firestore:', error);
+      }
+    }
+  };
+
+  loadUserDoc();
+}, [user?.uid]);
 
   // Cargar datos del usuario
   useEffect(() => {
@@ -223,11 +250,12 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
             total: (subtotal + shippingCost).toFixed(2)
           },
           back_urls: {
-            success: "http://localhost:3000/order-confirmation",
-            failure: `${window.location.origin}/cart`,
-            pending: `${window.location.origin}/cart`
+            success: `${FRONT_END}/pago-exitoso`,
+            failure: `${FRONT_END}/cart`,
+            pending: `${FRONT_END}/cart`,
           },
-          auto_return: 'approved'
+          auto_return: 'approved',
+          
         })
       });
   
@@ -302,15 +330,12 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
         throw new Error(data.error || 'Error al procesar el pago');
       }
 
-      navigate('/order-confirmation', {
+      navigate('/pago-exitoso', {
         state: {
-          orderDetails: {
-            items: cartItems,
-            customer: customerData,
-            paymentMethod: 'Tarjeta',
-            total: calculateTotal().toFixed(2),
-            paymentData: data
-          }
+          items: cartItems,
+          customer: customerData,
+          total: calculateTotal().toFixed(2),
+          paymentData: data
         }
       });
       
