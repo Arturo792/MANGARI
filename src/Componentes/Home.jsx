@@ -338,4 +338,3 @@ br
 };
 
 export default Home;
-

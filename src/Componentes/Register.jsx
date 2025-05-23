@@ -29,6 +29,8 @@ const Register = () => {
       setError(error.message);
     }
   };
+
+  
   return (
     <div className="register-container">
       <button className="close-button" onClick={() => navigate('/')}>

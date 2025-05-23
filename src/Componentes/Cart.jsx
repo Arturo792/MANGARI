@@ -97,27 +97,60 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   }, []);
 
-  const handleApplyCoupon = useCallback((code = coupon.code) => {
-    const upperCode = code.toUpperCase().trim();
-    
-    if (upperCode === 'CUPON1') {
+  const handleApplyCoupon = useCallback(async (codeInput) => {
+  const code = (codeInput || coupon.code).toUpperCase().trim();
+
+  try {
+    const docRef = doc(db, 'coupons', 'active');
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
       setCoupon({
-        code: upperCode,
-        discount: 0.1,
-        message: '¡Cupón aplicado! 10% de descuento',
-        applied: true
+        code,
+        discount: 0,
+        message: 'No hay cupones activos disponibles.',
+        applied: false,
       });
-      return true;
+      return false;
     }
-    
+
+    const data = docSnap.data();
+    const activeCode = data.code?.toUpperCase().trim();
+
+    if (code === activeCode) {
+      const discountDecimal = data.discount / 100;
+
+      setCoupon({
+        code,
+        discount: discountDecimal,
+        message: `¡Cupón aplicado! ${data.discount}% de descuento`,
+        applied: true,
+      });
+
+      return true;
+    } else {
+      setCoupon({
+        code,
+        discount: 0,
+        message: 'Cupón no válido',
+        applied: false,
+      });
+
+      return false;
+    }
+  } catch (error) {
+    console.error('Error al verificar el cupón:', error);
     setCoupon({
-      code: upperCode,
+      code,
       discount: 0,
-      message: 'Cupón no válido',
-      applied: false
+      message: 'Hubo un error al aplicar el cupón. Intenta de nuevo.',
+      applied: false,
     });
     return false;
-  }, [coupon.code]);
+  }
+}, [coupon.code, setCoupon]);
+
+
 
   useEffect(() => {
     if (location.state?.couponCode) {
@@ -347,14 +380,44 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   };
 
+
   // Funciones de cálculo
   const calculateSubtotal = () => cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const calculateDiscount = () => calculateSubtotal() * coupon.discount;
-  const calculateShipping = () => {
-    const subtotalAfterDiscount = calculateSubtotal() - calculateDiscount();
-    return subtotalAfterDiscount < 300 ? 100 : 0;
-  };
-  const calculateTotal = () => (calculateSubtotal() - calculateDiscount()) + calculateShipping();
+  const calculateShipping = async () => {
+  const docRef = doc(db, "settings", "shipping");
+  const docSnap = await getDoc(docRef);
+
+  let costoEnvio = 0;
+  let freeFrom = 0; // Valor por defecto
+
+  if (docSnap.exists()) {
+    costoEnvio = docSnap.data().cost;
+    freeFrom = docSnap.data().freeFrom; 
+
+
+    console.log("Document data:", docSnap.data());
+  } else {
+    console.log("No such document!");
+  }
+
+  const subtotalAfterDiscount = calculateSubtotal() - calculateDiscount();
+  return subtotalAfterDiscount < freeFrom ? costoEnvio : 0;
+};
+  
+  const [shipping, setShipping] = useState(0);
+
+  useEffect(() => {
+    const fetchShipping = async () => {
+      const cost = await calculateShipping();
+      setShipping(cost);
+    };
+    fetchShipping();
+  }, [cartItems, coupon]);
+
+    const calculateTotal = () => (calculateSubtotal() - calculateDiscount()) + shipping;
+
+
 
   if (cartItems.length === 0) {
     return (
@@ -469,21 +532,22 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
               </div>
             )}
             
-            <div className={`summary-row shipping ${calculateShipping() === 0 ? 'free' : 'paid'}`}>
+           <div className={`summary-row shipping ${shipping === 0 ? 'free' : 'paid'}`}>
               <span>
                 Envío:
-                {calculateShipping() === 0 && (
+                {shipping === 0 && (
                   <span className="free-shipping-badge">¡Gratis!</span>
                 )}
               </span>
               <span>
-                {calculateShipping() === 0 ? (
+                {shipping === 0 ? (
                   <span className="free-shipping-text">$0.00</span>
                 ) : (
-                  <span className="paid-shipping-text">${calculateShipping().toFixed(2)}</span>
+                  <span className="paid-shipping-text">${shipping.toFixed(2)}</span>
                 )}
               </span>
             </div>
+
             
             <div className={`summary-row total ${calculateShipping() === 0 ? 'free-shipping-total' : ''}`}>
               <span>Total:</span>

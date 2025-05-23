@@ -8,7 +8,7 @@ const AdminNavbar = () => {
       <ul className="admin-navbar-list">
         <li>
           <Link to="/admin" className="admin-navbar-link">
-            Panel de Administrador
+            Cupones
           </Link>
         </li>
        
@@ -22,6 +22,16 @@ const AdminNavbar = () => {
             Administrar Piedras
           </Link>
         </li>
+
+
+          {/*
+          <li>
+            <Link to="/admin/add-admin" className="admin-navbar-link">
+              Añadir Administrador
+            </Link>
+          </li>
+        */}
+
       </ul>
     </nav>
   );
