@@ -90,3 +90,41 @@
     cursor: pointer;
   }
   
+  .forgot-password-button {
+  background: none;
+  border: none;
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.forgot-password-button:hover {
+  color: #333;
+}
+
+.success-message {
+  color: #28a745;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.cancel-button {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cancel-button:hover {
+  background-color: #e2e6ea;
+}

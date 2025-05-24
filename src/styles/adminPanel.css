@@ -124,3 +124,109 @@ input[type=number] {
   padding-top: 20px;
   border-top: 1px solid #ccc;
 }
+
+
+
+/* Estilos para la lista de cupones */
+.coupons-list {
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+.coupons-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.coupons-list th, 
+.coupons-list td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.coupons-list th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+  color: #212121;
+}
+
+.coupons-list tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Estilos para los nuevos botones */
+.activate-btn {
+  padding: 8px 12px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background-color 0.3s;
+}
+
+.activate-btn:hover {
+  background-color: #4cae4c;
+}
+
+.deactivate-btn {
+  padding: 8px 12px;
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background-color 0.3s;
+}
+
+.deactivate-btn:hover {
+  background-color: #eea236;
+}
+
+/* Estilos para el checkbox */
+.checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox input {
+  width: auto;
+  margin-right: 10px;
+}
+
+.checkbox label {
+  margin-bottom: 0;
+}
+
+/* Estilos para el campo de fecha */
+input[type="datetime-local"] {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+}
+
+/* Estilos responsivos para la tabla */
+@media (max-width: 768px) {
+  .coupons-list table {
+    display: block;
+  }
+  
+  .coupons-list th, 
+  .coupons-list td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  
+  .activate-btn, 
+  .deactivate-btn,
+  .remove-btn {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+}

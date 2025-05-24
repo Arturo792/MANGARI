@@ -6,6 +6,7 @@ import { db } from '../firebase';
 import '../styles/Cart.modules.css';
 import CardPaymentForm from './CardPaymentForm';
 
+
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 const FRONT_END = process.env.REACT_APP_FRONTEND_URL || 'http://localhost:3000';
 
@@ -226,21 +227,23 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
   
     try {
       const subtotal = calculateSubtotal() - calculateDiscount();
-      const shippingCost = calculateShipping();
+      const shippingCost = await calculateShipping(); // ✅ Esperamos el valor
+
   
-      const validItems = cartItems.map(item => {
-        const dbProduct = productsFromDB.find(p => p.id === item.id);
-        const basePrice = dbProduct?.price || item.price;
-        const discountedPrice = basePrice * (1 - coupon.discount);
-  
-        return {
-          id: item.id,
-          title: dbProduct?.title || item.title,
-          unit_price: Number(discountedPrice.toFixed(2)),
-          quantity: item.quantity,
-          picture_url: dbProduct?.image || item.image
-        };
-      }).filter(item => item.title && item.unit_price > 0);
+    const validItems = cartItems.map(item => {
+    const dbProduct = productsFromDB.find(p => p.id === item.id);
+    const basePrice = dbProduct?.price || item.price;
+    const discountedPrice = basePrice * (1 - coupon.discount);
+
+    return {
+      id: item.id,
+      title: dbProduct?.title || item.title,
+      unit_price: Number(discountedPrice.toFixed(2)),
+      quantity: item.quantity,
+      picture_url: dbProduct?.image || item.image
+    };
+       }).filter(item => item.title && item.unit_price > 0);
+
   
       if (validItems.length !== cartItems.length) {
         throw new Error('Algunos productos no están disponibles');
@@ -275,13 +278,14 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
             free_shipping: shippingCost === 0
           },
           metadata: { 
-            userId: user?.id || 'guest',
-            coupon: coupon.code || 'none',
-            discount: coupon.discount,
-            shippingCost,
-            subtotal: subtotal.toFixed(2),
-            total: (subtotal + shippingCost).toFixed(2)
-          },
+          userId: user?.id || 'guest',
+          coupon: coupon.code || 'none',
+          discount: coupon.discount,
+          shippingCost,
+          subtotal: subtotal.toFixed(2),
+          total: (subtotal + shippingCost).toFixed(2) // ✅ Ya puedes usar toFixed
+        },
+
           back_urls: {
             success: `${FRONT_END}/pago-exitoso`,
             failure: `${FRONT_END}/cart`,
