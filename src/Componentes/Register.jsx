@@ -249,8 +249,7 @@ const Register = () => {
 
           <p className="login-message">
             ¿No tienes una cuenta? <Link to="/register" className="login-link">Regístrate</Link>
-                
-
+              
           </p>
         </>
       )}
