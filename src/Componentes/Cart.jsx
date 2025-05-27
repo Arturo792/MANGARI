@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import '../styles/Cart.modules.css';
 import CardPaymentForm from './CardPaymentForm';
@@ -97,6 +96,42 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
       console.error('Error al cargar datos del usuario:', error);
     }
   }, []);
+
+  const saveOrderToFirebase = async (paymentMethod, status = 'pending') => {
+    try {
+      const orderData = {
+        userId: user?.uid || 'guest',
+        customer: customerData,
+        items: cartItems.map(item => {
+          const dbProduct = productsFromDB.find(p => p.id === item.id) || item;
+          return {
+            id: item.id,
+            title: dbProduct.title,
+            price: dbProduct.price,
+            quantity: item.quantity,
+            image: dbProduct.image || '/placeholder-product.jpg'
+          };
+        }),
+        subtotal: calculateSubtotal(),
+        discount: calculateDiscount(),
+        shipping: shipping,
+        total: calculateTotal(),
+        coupon: coupon.applied ? coupon.code : null,
+        paymentMethod: paymentMethod,
+        status: status,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      const ordersCollection = collection(db, 'orders');
+      const newOrderRef = await addDoc(ordersCollection, orderData);
+      return newOrderRef.id;
+    } catch (error) {
+      console.error('Error al guardar el pedido:', error);
+      throw error;
+    }
+  };
+
 
   const handleApplyCoupon = useCallback(async (codeInput) => {
   const code = (codeInput || coupon.code).toUpperCase().trim();
@@ -216,101 +251,125 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   }, [cartItems]);
 
-  const handleRealMercadoPagoPayment = async () => {
-    if (!validateForm()) {
-      setPaymentError('Completa todos los campos correctamente');
-      return;
+const handleRealMercadoPagoPayment = async () => {
+  if (!validateForm()) {
+    setPaymentError('Completa todos los campos correctamente');
+    return;
+  }
+
+  setLoading(true);
+  setPaymentError(null);
+  
+  try {
+    // 1. Guardar el pedido en Firebase primero
+    const orderId = await saveOrderToFirebase('MercadoPago');
+    
+    // 2. Calcular totales
+    const subtotal = calculateSubtotal() - calculateDiscount();
+    const shippingCost = await calculateShipping();
+    const total = subtotal + shippingCost;
+
+    // 3. Preparar items para MercadoPago
+    const validItems = cartItems.map(item => {
+      const dbProduct = productsFromDB.find(p => p.id === item.id);
+      const basePrice = dbProduct?.price || item.price;
+      const discountedPrice = basePrice * (1 - coupon.discount);
+
+      // Verificar stock
+      if (dbProduct && item.quantity > dbProduct.stock) {
+        throw new Error(`No hay suficiente stock para ${item.title}`);
+      }
+
+      return {
+        id: item.id,
+        title: dbProduct?.title || item.title,
+        unit_price: Number(discountedPrice.toFixed(2)),
+        quantity: item.quantity,
+        picture_url: dbProduct?.image || item.image || '/placeholder-product.jpg'
+      };
+    }).filter(item => item.title && item.unit_price > 0);
+
+    if (validItems.length !== cartItems.length) {
+      throw new Error('Algunos productos no están disponibles');
     }
 
-    setLoading(true);
-    setPaymentError(null);
-  
-    try {
-      const subtotal = calculateSubtotal() - calculateDiscount();
-      const shippingCost = await calculateShipping(); // ✅ Esperamos el valor
+    // 4. Agregar costo de envío si aplica
+    if (shippingCost > 0) {
+      validItems.push({
+        id: 'shipping',
+        title: 'Costo de envío',
+        unit_price: shippingCost,
+        quantity: 1,
+        picture_url: ''
+      });
+    }
 
-  
-    const validItems = cartItems.map(item => {
-    const dbProduct = productsFromDB.find(p => p.id === item.id);
-    const basePrice = dbProduct?.price || item.price;
-    const discountedPrice = basePrice * (1 - coupon.discount);
-
-    return {
-      id: item.id,
-      title: dbProduct?.title || item.title,
-      unit_price: Number(discountedPrice.toFixed(2)),
-      quantity: item.quantity,
-      picture_url: dbProduct?.image || item.image
-    };
-       }).filter(item => item.title && item.unit_price > 0);
-
-  
-      if (validItems.length !== cartItems.length) {
-        throw new Error('Algunos productos no están disponibles');
-      }
-  
-      if (shippingCost > 0) {
-        validItems.push({
-          id: 'shipping',
-          title: 'Costo de envío',
-          unit_price: shippingCost,
-          quantity: 1,
-          picture_url: ''
-        });
-      }
-  
-      const response = await fetch(`${API_URL}/create-preference`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: validItems,
-          payer: {
-            name: customerData.name,
-            email: customerData.email,
-            phone: { number: customerData.phone },
-            address: {
-              street_name: customerData.address,
-              zip_code: customerData.zipCode
-            }
-          },
-          shipments: {
-            cost: shippingCost,
-            free_shipping: shippingCost === 0
-          },
-          metadata: { 
-          userId: user?.id || 'guest',
+    // 5. Crear preferencia de pago en MercadoPago
+    const response = await fetch(`${API_URL}/create-preference`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: validItems,
+        payer: {
+          name: customerData.name,
+          email: customerData.email,
+          phone: { number: customerData.phone },
+          address: {
+            street_name: customerData.address,
+            zip_code: customerData.zipCode
+          }
+        },
+        shipments: {
+          cost: shippingCost,
+          free_shipping: shippingCost === 0
+        },
+        metadata: { 
+          orderId: orderId,
+          userId: user?.uid || 'guest',
           coupon: coupon.code || 'none',
           discount: coupon.discount,
-          shippingCost,
           subtotal: subtotal.toFixed(2),
-          total: (subtotal + shippingCost).toFixed(2) // ✅ Ya puedes usar toFixed
+          total: total.toFixed(2)
         },
+        back_urls: {
+          success: `${FRONT_END}/pago-exitoso?orderId=${orderId}`,
+          failure: `${FRONT_END}/cart?error=payment_failed`,
+          pending: `${FRONT_END}/cart?status=pending`
+        },
+        auto_return: 'approved',
+        notification_url: `${API_URL}/mercadopago/webhook` // Para recibir notificaciones de pago
+      })
+    });
 
-          back_urls: {
-            success: `${FRONT_END}/pago-exitoso`,
-            failure: `${FRONT_END}/cart`,
-            pending: `${FRONT_END}/cart`,
-          },
-          auto_return: 'approved',
-          
-        })
+    const data = await response.json();
+    
+    if (!response.ok) {
+      // Si falla, actualizar estado del pedido
+      await updateDoc(doc(db, 'orders', orderId), {
+        status: 'failed',
+        error: data.error || 'Error al crear el pago',
+        updatedAt: new Date().toISOString()
       });
-  
-      const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al crear el pago');
-      }
-  
-      window.location.href = data.sandbox_init_point;
-  
-    } catch (error) {
-      console.error('Error:', error);
-      setPaymentError(error.message);
-    } finally {
-      setLoading(false);
+      throw new Error(data.error || 'Error al crear el pago');
     }
-  };
+
+    // 6. Redirigir a MercadoPago
+    window.location.href = data.sandbox_init_point || data.init_point;
+
+  } catch (error) {
+    console.error('Error en el proceso de pago:', error);
+    setPaymentError(error.message);
+    
+    // Mostrar error específico si es de stock
+    if (error.message.includes('stock')) {
+      setPaymentError(error.message);
+    } else {
+      setPaymentError('Ocurrió un error al procesar el pago. Por favor intenta nuevamente.');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   
 
@@ -416,6 +475,7 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
       const cost = await calculateShipping();
       setShipping(cost);
     };
+
     fetchShipping();
   }, [cartItems, coupon]);
 

@@ -144,9 +144,10 @@ const Home = () => {
         para crear piezas únicas que no solo adornan, sino que también armonizan tu energía. 
         Cada joya es cuidadosamente elaborada para conectar con tu esencia.
       </p>
-      <button className="about-button" onClick={() => navigate('/nosotros')}>
-        CONOCE NUESTRA HISTORIA
+      <button className="about-button cta-button" onClick={() => navigate('/nosotros')}>
+      CONOCE NUESTRA HISTORIA
       </button>
+      
     </div>
     <div className="about-image">
       <img 
@@ -180,10 +181,7 @@ br
                     onError={(e) => e.target.src = 'https://via.placeholder.com/500x500?text=Imagen+no+disponible'}
                   />
                   <div className="product-overlay">
-                    <button 
-                      className="view-button"
-                      onClick={() => handleViewProduct(product.id)}
-                    >
+                    <button className="view-button cta-button" onClick={() => handleViewProduct(product.id)}>
                       VER DETALLES
                     </button>
                   </div>
@@ -199,9 +197,9 @@ br
         )}
         
         <div className="section-footer">
-          <button className="view-all-button" onClick={() => navigate('/products')}>
-            VER TODOS LOS PRODUCTOS
-          </button>
+         <button className="view-all-button cta-button" onClick={() => navigate('/products')}>
+          VER TODOS LOS PRODUCTOS
+         </button>
         </div>
       </section>
       <br />
@@ -234,7 +232,7 @@ br
                 <div className="piedra-info">
                   <h3>{piedra.nombre}</h3>
                   <p className="propiedad">{piedra.propiedad.substring(0, 80)}...</p>
-                  <button className="piedra-button">
+                  <button className="piedra-button cta-button">
                     VER PROPIEDADES
                   </button>
                 </div>
@@ -336,5 +334,5 @@ br
     </div>
   );
 };
-
+ 
 export default Home;

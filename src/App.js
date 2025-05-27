@@ -20,7 +20,8 @@ import AddAdmin from './admin/addAdmin';
 import EditProfile from './Componentes/editProfile';
 import Checkout from './admin/Checkout';
 import AdminPiedras from './admin/adminPiedras';
-import PagoExitoso from './Componentes/successPayment';
+import Orders from './admin/Orders'; 
+import PagoExitoso from './Componentes/successPayment'; 
 import './App.css';
 
 const App = () => {
@@ -252,6 +253,7 @@ const App = () => {
             path="/admin/piedras" 
             element={user && isAdmin ? <AdminPiedras /> : <Navigate to="/login" />} 
           />
+         <Route path="/admin/orders" element={<Orders />} />
         </Routes>
       </main>
 

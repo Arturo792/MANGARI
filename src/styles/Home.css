@@ -667,3 +667,63 @@ body {
     padding: 4rem 1rem;
   }
 }
+/* Añadir estas reglas para asegurar la consistencia */
+.cta-button, 
+.about-button, 
+.view-all-button, 
+.view-button, 
+.piedra-button {
+  padding: 12px 30px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+}
+
+/* Especificar estilos para cada tipo de botón */
+.about-button {
+  background-color: transparent;
+  color: #575757;
+  border: 1px solid #575757 !important;
+}
+
+.about-button:hover {
+  background-color: #575757;
+  color: #E2DBD5;
+}
+
+.view-all-button {
+  background-color: transparent;
+  color: #575757;
+  border: 1px solid #575757 !important;
+}
+
+.view-all-button:hover {
+  background-color: #575757;
+  color: #E2DBD5;
+}
+
+.view-button {
+  background-color: transparent;
+  color: #E2DBD5;
+  border: 1px solid #E2DBD5 !important;
+}
+
+.view-button:hover {
+  background-color: #E2DBD5;
+  color: #212121;
+}
+
+.piedra-button {
+  background-color: #BEAEA0;
+  color: #212121;
+  border: 1px solid #BEAEA0 !important;
+}
+
+.piedra-button:hover {
+  background-color: #CFC3B9;
+}
