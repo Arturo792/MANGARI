@@ -130,6 +130,8 @@ const AdminPiedras = () => {
     });
     setPreviewImage(piedra.imagen);
     setEditingId(piedra.id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   };
 
   const handleDelete = async (id, imagenUrl) => {

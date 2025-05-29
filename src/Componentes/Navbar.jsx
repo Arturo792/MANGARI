@@ -21,7 +21,7 @@ const Navbar = ({ cartItems }) => {
       }
     };
     
-    fetchCoupon();
+    fetchCoupon(); 
   }, []);
 
   const toggleCoupon = () => {

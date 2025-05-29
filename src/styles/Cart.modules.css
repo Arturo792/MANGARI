@@ -40,6 +40,8 @@
   text-align: center;
   margin-bottom: 2rem;
   color: #212121;
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .cart-content {
@@ -50,7 +52,7 @@
 
 /* Cart Items */
 .cart-items {
-  flex: 2;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -70,13 +72,19 @@
   width: 120px;
   height: 120px;
   flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .item-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.item-image img:hover {
+  transform: scale(1.05);
 }
 
 .item-details {
@@ -89,12 +97,14 @@
 .item-details h3 {
   margin: 0;
   color: #212121;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .item-details p {
   margin: 0;
   color: #575757;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .quantity-controls {
@@ -113,7 +123,10 @@
   cursor: pointer;
   font-weight: bold;
   color: #212121;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .quantity-controls button:disabled {
@@ -123,16 +136,20 @@
 
 .quantity-controls button:hover:not(:disabled) {
   background-color: #BEAEA0;
+  transform: translateY(-1px);
 }
 
 .quantity-controls span {
   min-width: 30px;
   text-align: center;
+  font-weight: 500;
 }
 
 .item-subtotal {
   font-weight: bold;
   margin-top: 0.5rem !important;
+  font-size: 1.05rem;
+  color: #212121;
 }
 
 .remove-btn {
@@ -145,15 +162,16 @@
   text-decoration: underline;
   padding: 0;
   margin-top: 0.5rem;
+  transition: color 0.2s;
 }
 
 .remove-btn:hover {
-  color: #212121;
+  color: #d32f2f;
 }
 
-/* Cart Summary */
+/* Cart Summary - Now positioned below items */
 .cart-summary {
-  flex: 1;
+  width: 100%;
   background-color: white;
   padding: 1.5rem;
   border-radius: 8px;
@@ -167,35 +185,44 @@
 .coupon-section {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .coupon-section h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #212121;
+  font-weight: 600;
 }
 
 .coupon-input {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .coupon-input input {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #CFC3B9;
   border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.coupon-input input:focus {
+  outline: none;
+  border-color: #BEAEA0;
 }
 
 .coupon-input button {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   background-color: #BEAEA0;
   color: #212121;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .coupon-input button:disabled {
@@ -205,23 +232,27 @@
 
 .coupon-input button:not(:disabled):hover {
   background-color: #CFC3B9;
+  transform: translateY(-1px);
 }
 
 .coupon-message {
   font-size: 0.9rem;
   margin: 0.25rem 0 0;
-  padding: 0.25rem;
+  padding: 0.5rem;
   border-radius: 4px;
+  text-align: center;
 }
 
 .coupon-message.success {
   color: #2e7d32;
   background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
 }
 
 .coupon-message.error {
   color: #c62828;
   background-color: #ffebee;
+  border: 1px solid #ef9a9a;
 }
 
 .summary-totals {
@@ -236,15 +267,40 @@
 .summary-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
 }
 
 .summary-row.discount {
   color: #2e7d32;
+  font-weight: 500;
 }
 
 .summary-row.total {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px dashed #CFC3B9;
+}
+
+.summary-row.shipping {
+  padding: 0.75rem 0;
+  margin: 0.75rem 0;
+  border-top: 1px dashed #E2DBD5;
+  border-bottom: 1px dashed #E2DBD5;
+}
+
+.summary-row.shipping span:last-child {
+  font-weight: bold;
+}
+
+.summary-row.shipping.free span:last-child {
+  color: #2e7d32;
+}
+
+.summary-row.shipping.paid span:last-child {
+  color: #d32f2f;
 }
 
 .checkout-btn {
@@ -255,12 +311,17 @@
   border: none;
   border-radius: 4px;
   font-weight: bold;
+  font-size: 1.05rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .checkout-btn:hover:not(:disabled) {
   background-color: #575757;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .checkout-btn:disabled {
@@ -273,36 +334,46 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 .payment-section h2 {
   margin: 0 0 1rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #212121;
+  font-weight: 600;
 }
 
 .customer-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .form-group label {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #575757;
+  font-weight: 500;
 }
 
 .form-group input {
-  padding: 0.75rem;
+  padding: 0.85rem;
   border: 1px solid #CFC3B9;
   border-radius: 4px;
   font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #BEAEA0;
+  box-shadow: 0 0 0 2px rgba(190, 174, 160, 0.2);
 }
 
 .form-group input.error {
@@ -311,32 +382,35 @@
 
 .error-message {
   color: #c62828;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
 .payment-methods {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 .method-options {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .method-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 0.75rem;
+  padding: 1.25rem;
   border: none;
   border-radius: 4px;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
 }
 
 .method-btn:disabled {
@@ -349,8 +423,14 @@
   color: white;
 }
 
+.method-btn.mercadopago:hover:not(:disabled) {
+  background-color: #0088cc;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .method-btn.mercadopago img {
-  height: 20px;
+  height: 24px;
 }
 
 .method-btn.card {
@@ -358,17 +438,26 @@
   color: #212121;
 }
 
+.method-btn.card:hover:not(:disabled) {
+  background-color: #CFC3B9;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .back-btn {
-  padding: 0.75rem;
+  padding: 1rem;
   background: none;
   border: 1px solid #CFC3B9;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  font-weight: 500;
+  text-align: center;
 }
 
 .back-btn:hover:not(:disabled) {
   background-color: #E2DBD5;
+  transform: translateY(-2px);
 }
 
 .back-btn:disabled {
@@ -384,6 +473,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid #ef9a9a;
+  margin-bottom: 1rem;
 }
 
 .payment-error button {
@@ -392,53 +483,63 @@
   color: #c62828;
   cursor: pointer;
   text-decoration: underline;
+  font-weight: 500;
 }
 
 /* Responsive */
 @media (min-width: 768px) {
-  .cart-content {
-    flex-direction: row;
+  .customer-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .form-group.full-width {
+    grid-column: span 2;
+  }
+  
+  .cart-item {
+    padding: 2rem;
+  }
+  
+  .item-image {
+    width: 150px;
+    height: 150px;
   }
   
   .cart-summary {
-    position: sticky;
-    top: 1rem;
-    align-self: flex-start;
+    padding: 2rem;
   }
 }
 
-
-/* Agrega esto a tu Cart.modules.css */
-
-.cart-empty-message {
-  /* Asegúrate que el contenedor tenga estas propiedades */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+@media (min-width: 992px) {
+  .customer-form {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .form-group.full-width {
+    grid-column: span 3;
+  }
 }
 
+/* Continue shopping button */
 .continue-shopping-btn {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 2rem;
   background-color: #BEAEA0;
   color: #212121;
   border: none;
   border-radius: 4px;
   font-weight: bold;
+  font-size: 1rem;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 1.5rem; /* Espacio superior */
-  width: auto; /* Ancho automático según contenido */
-  text-align: center;
+  margin-top: 1.5rem;
 }
 
-/* Efectos hover */
 .continue-shopping-btn:hover {
   background-color: #CFC3B9;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -447,35 +548,39 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.summary-row.shipping {
-  padding: 0.75rem 0;
-  margin: 0.75rem 0;
-  border-top: 1px dashed #E2DBD5;
-  border-bottom: 1px dashed #E2DBD5;
-}
-
-.summary-row.shipping span:last-child {
-  font-weight: bold;
-  color: #2e7d32; /* Verde para envío gratis */
-}
-
-.summary-row.shipping.paid span:last-child {
-  color: #d32f2f; /* Rojo para envío con costo */
-}
-
-/* Estilo para cuando el envío es gratis */
+/* Shipping highlights */
 .shipping-free {
   color: #2e7d32;
   font-weight: bold;
 }
 
-/* Estilo para cuando tiene costo */
 .shipping-cost {
   color: #d32f2f;
   font-weight: bold;
 }
 
-/* Animación para destacar el cambio de envío */
+.free-shipping-badge {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.free-shipping-text {
+  color: #2e7d32;
+}
+
+.paid-shipping-text {
+  color: #d32f2f;
+}
+
+.free-shipping-total {
+  color: #2e7d32;
+}
+
+/* Animations */
 @keyframes highlightShipping {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -486,25 +591,7 @@
   animation: highlightShipping 0.5s ease;
 }
 
-/* Estilos responsivos para la sección de envío */
-@media (max-width: 768px) {
-  .summary-row.shipping {
-    padding: 0.5rem 0;
-    margin: 0.5rem 0;
-  }
-}
-
-/* Añade transición suave para cambios de precio */
-.summary-row {
-  transition: all 0.3s ease;
-}
-
-/* Mejora visual para el total cuando hay envío gratis */
-.summary-row.total.free-shipping {
-  color: #2e7d32;
-}
-
-/* Estilo para el tooltip de envío gratuito */
+/* Tooltip */
 .shipping-info-tooltip {
   position: relative;
   display: inline-block;
@@ -520,19 +607,20 @@
   transform: translateX(-50%);
   background-color: #212121;
   color: white;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border-radius: 4px;
-  font-size: 0.8rem;
-  width: 200px;
+  font-size: 0.85rem;
+  width: 220px;
   text-align: center;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .shipping-info-tooltip:hover::after {
   opacity: 1;
   visibility: visible;
-  bottom: calc(100% + 5px);
+  bottom: calc(100% + 8px);
 }

@@ -146,13 +146,18 @@ const ProductManager = ({ mode = 'create' }) => {
         updatedAt: new Date().toISOString()
       };
 
-      if (mode === 'create') {
-        productData.id = Date.now().toString();
-        productData.createdAt = new Date().toISOString();
-        await setDoc(doc(db, "products", productData.id), productData);
-      } else {
-        await setDoc(doc(db, "products", productId), productData, { merge: true });
-      }
+     if (mode === 'create') {
+  productData.id = Date.now().toString();
+  productData.createdAt = new Date().toISOString();
+  await setDoc(doc(db, "products", productData.id), productData);
+} else {
+  await setDoc(doc(db, "products", productId), productData, { merge: true });
+}
+
+setShowSuccess(true);
+window.scrollTo({ top: 0, behavior: 'smooth' });
+setTimeout(() => setShowSuccess(false), 3000);
+
 
       setShowSuccess(true);
     } catch (err) {
@@ -187,33 +192,15 @@ const ProductManager = ({ mode = 'create' }) => {
     setShowSuccess(false);
   };
 
-  if (showSuccess) {
-    return (
-      <div className="success-container">
-        <h2>
-          {mode === 'create' 
-            ? '¡Producto agregado exitosamente!' 
-            : '¡Producto actualizado exitosamente!'}
-        </h2>
-        <div className="success-actions">
-          <button onClick={() => navigate('/admin/products')} className="btn primary">
-            Ver lista de productos
-          </button>
-          {mode === 'create' && (
-            <button onClick={resetForm} className="btn secondary">
-              Agregar otro producto
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
+ 
 
   if (mode === 'list') {
     return (
       <div className="product-list-container">
         <div className="product-list-header">
           <h1>Administración de Productos</h1>
+
+          
           <button 
             onClick={() => navigate('/admin/products/new')}
             className="add-product-button"
@@ -281,6 +268,14 @@ const ProductManager = ({ mode = 'create' }) => {
       </h1>
       
       {error && <div className="error-message">{error}</div>}
+      {showSuccess && (
+        <div className="alert success-alert">
+          {mode === 'create'
+            ? '¡Producto agregado exitosamente!'
+            : '¡Producto actualizado exitosamente!'}
+        </div>
+      )}
+
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">

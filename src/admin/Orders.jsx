@@ -222,7 +222,15 @@ const Orders = ({ user }) => {
                   <p>{order.customer.name}</p>
                   <p>{order.customer.email}</p>
                   <p>{order.customer.phone}</p>
-                  <p>{order.customer.address}, {order.customer.zipCode}</p>
+                  <p>
+                  {order.customer.calle} #{order.customer.numero}, {order.customer.colonia},<br />
+                  {order.customer.ciudad}, {order.customer.estado}, CP {order.customer.zipCode}
+                </p>
+
+
+
+
+
                 </div>
               </div>
 

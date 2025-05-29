@@ -1,7 +1,7 @@
 /* Navbar Elegante - Manteniendo la paleta de colores original */
 .navbar {
   background-color: #212121;
-  padding: 0 2rem;
+  padding: 0 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,6 +25,7 @@
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   font-family: 'Montserrat', sans-serif;
   letter-spacing: 1px;
+  margin-left: 1rem;
 }
 
 .navbar-brand:hover {
@@ -83,12 +84,13 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  margin-right: 1rem; /* Mueve los iconos hacia la izquierda */
+  gap: 1.5rem; /* Reduje un poco el espacio entre iconos */
 }
 
 .navbar-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   filter: brightness(0) invert(1);
 }
@@ -97,38 +99,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .login-link:hover, .cart-link:hover {
-  background-color: rgba(212, 163, 115, 0.1);
-  transform: translateY(-2px);
+  background-color: rgba(190, 160, 120, 0.15);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .login-link:hover .navbar-icon, 
 .cart-link:hover .navbar-icon {
-  filter: brightness(0) invert(0.8) sepia(1) hue-rotate(-10deg) saturate(5);
+  filter: brightness(0) invert(0.7) sepia(0.3) hue-rotate(-10deg) saturate(2) brightness(0.9);
 }
 
 .cart-count {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -2px; /* Ajustamos posición */
+  right: -2px;
   background-color: #d4a373;
   color: #212121;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
+  width: 24px; /* Aumentamos tamaño */
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.85rem; /* Texto un poco más grande */
   font-weight: 700;
 }
+
 
 /* Estilos mejorados para el cupón */
 .coupon-container {
@@ -147,22 +150,27 @@
 }
 
 .coupon-bell:hover {
-  background-color: rgba(212, 163, 115, 0.1);
+  background-color: rgba(190, 160, 120, 0.15); /* Fondo más visible al hover */
+  transform: translateY(-2px) scale(1.05); /* Efecto más pronunciado */
+}
+.coupon-bell:hover .navbar-icon {
+  filter: brightness(0) invert(0.7) sepia(0.3) hue-rotate(-10deg) saturate(2) brightness(0.9);
 }
 
+/* Mejora para el icono de notificación */
 .coupon-alert {
   position: absolute;
-  top: 3px;
-  right: 3px;
+  top: 5px;
+  right: 5px;
   background-color: #ff4757;
   color: white;
   border-radius: 50%;
-  width: 18px;
-  height: 18px;
+  width: 20px; /* Aumentamos tamaño */
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: bold;
   animation: pulse 2s infinite;
 }
