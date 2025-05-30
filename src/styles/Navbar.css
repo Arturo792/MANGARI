@@ -275,3 +275,31 @@
     margin-left: 2rem;
   }
 }
+.coupon-dropdown {
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  z-index: 1000;
+  width: 250px;
+}
+
+.coupon-details {
+  margin-bottom: 10px;
+}
+
+.coupon-button {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #efb810;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}

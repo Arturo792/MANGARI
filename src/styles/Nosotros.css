@@ -1,165 +1,187 @@
 .nosotros-container {
-    font-family: 'Raleway', sans-serif;
-    text-align: center;
-  }
-  
-  .hero-section {
-    padding: 100px 20px;
-    background-color: #E2DBD5;
-  }
-  
-  .hero-section h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    color: #212121;
-  }
-  
-  .hero-section p {
-    font-size: 1.2rem;
-    max-width: 800px;
-    margin: 0 auto;
-    color: #575757;
-  }
-  
-  .historia-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .historia-content {
-    flex: 1;
-    text-align: left;
-    padding-right: 40px;
-  }
-  
-  .historia-content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: #212121;
-  }
-  
-  .historia-content p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #575757;
-  }
-  
-  .historia-imagen img {
-    max-width: 100%;
-    height: auto;
-    border: 2px solid #BEAEA0;
-    border-radius: 10px;
-  }
-  
-  .mision-vision-section {
-    display: flex;
-    justify-content: space-between;
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #F5F5F5;
-  }
-  
-  .mision, .vision {
-    flex: 1;
-    text-align: left;
-    padding: 0 20px;
-  }
-  
-  .mision h2, .vision h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #212121;
-  }
-  
-  .mision p, .vision p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #575757;
-  }
-  
-  .valores-section {
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .valores-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
-    color: #212121;
-  }
-  
-  .valores-grid {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-  }
-  
-  .valor-card {
-    flex: 1;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    background-color: #E2DBD5;
-    border: 1px solid #BEAEA0;
-  }
-  
-  .valor-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #212121;
-  }
-  
-  .valor-card p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #575757;
-  }
-  
-  .equipo-section {
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #F5F5F5;
-  }
-  
-  .equipo-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
-    color: #212121;
-  }
-  
-  .equipo-grid {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-  }
-  
-  .miembro-equipo {
-    flex: 1;
-    text-align: center;
-  }
-  
-  .miembro-equipo img {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 20px;
-    border: 2px solid #BEAEA0;
-    border-radius: 50%;
-  }
-  
-  .miembro-equipo h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #212121;
-  }
-  
-  .miembro-equipo p {
-    font-size: 1rem;
-    color: #575757;
-  }
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+  background-color: #f4ede8;
+}
+
+.hero-section {
+  padding: 60px 20px 30px;
+  background-color: #f4ede8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-section h1 {
+  font-size: 2.8rem;
+  color: #212121;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.hero-section h1::after {
+  content: '';
+  width: 60px;
+  height: 3px;
+  background-color: #b8a392;
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+.hero-section p {
+  font-size: 1.4rem;
+  max-width: 800px;
+  margin: 0 auto;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Historia */
+.historia-section {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.historia-section h2 {
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: #212121;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.historia-section h2::after {
+  content: '';
+  width: 80px;
+  height: 3px;
+  background-color: #b8a392;
+  display: block;
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.historia-section p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+/* Misión y Visión */
+.mision-vision-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #f1f1f1;
+  gap: 30px;
+}
+
+.mision, .vision {
+  flex: 1;
+  text-align: left;
+}
+
+.mision h2, .vision h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.mision h2::after, .vision h2::after {
+  content: '';
+  width: 50px;
+  height: 2px;
+  background-color: #b8a392;
+  display: block;
+  margin-top: 6px;
+  border-radius: 2px;
+}
+
+.mision p, .vision p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Valores */
+.valores-section {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.valores-section h2 {
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  color: #212121;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.valores-section h2::after {
+  content: '';
+  width: 90px;
+  height: 3px;
+  background-color: #b8a392;
+  display: block;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+.valores-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.valor-card {
+  flex: 1 1 220px;
+  padding: 20px;
+  background-color: #dfd2c7;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #c9b8a9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.valor-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #212121;
+}
+
+.valor-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Cierre final con frase */
+.final-section {
+  background-color: #c4ae9f;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.final-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.final-section p {
+  font-size: 1.3rem;
+  color: #fdfdfd;
+  max-width: 700px;
+  margin: 0 auto;
+  font-weight: 400;
+}

@@ -117,36 +117,43 @@ const AdminPanel = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const couponData = {
-        code: couponCode,
-        discount: Number(discountPercentage),
-        isActive: isActive,
-        createdAt: new Date(),
-        createdBy: auth.currentUser.email,
-        usedBy: [], // Array para registrar usuarios que han usado el cupón
-        expirationDate: expirationDate ? new Date(expirationDate) : null,
-      };
-      
-      // Guardar el cupón con su código como ID
-      await setDoc(doc(db, 'coupons', couponCode), couponData);
-      
-      // Actualizar la lista de cupones
-      await fetchCoupons();
-      
-      // Limpiar el formulario
-      setCouponCode('');
-      setDiscountPercentage(0);
-      setIsActive(true);
-      setExpirationDate('');
-      
-      alert('Cupón creado exitosamente');
-    } catch (error) {
-      console.error('Error guardando cupón:', error);
-      alert('Ocurrió un error al guardar el cupón.');
+  e.preventDefault();
+
+  try {
+    const couponRef = doc(db, 'coupons', couponCode);
+    const existing = await getDoc(couponRef);
+
+    if (existing.exists()) {
+      const overwrite = window.confirm('Ya existe un cupón con este código. ¿Deseas sobrescribirlo?');
+      if (!overwrite) return;
     }
-  };
+
+    const couponData = {
+      code: couponCode,
+      discount: Number(discountPercentage),
+      isActive: isActive,
+      createdAt: new Date(),
+      createdBy: auth.currentUser.email,
+      usedBy: existing.exists() ? existing.data().usedBy || [] : [],
+      expirationDate: expirationDate ? new Date(expirationDate) : null,
+    };
+
+    await setDoc(couponRef, couponData);
+
+    await fetchCoupons();
+
+    setCouponCode('');
+    setDiscountPercentage(0);
+    setIsActive(true);
+    setExpirationDate('');
+
+    alert('Cupón guardado exitosamente');
+  } catch (error) {
+    console.error('Error guardando cupón:', error);
+    alert('Ocurrió un error al guardar el cupón.');
+  }
+};
+
 
   const toggleCouponStatus = async (couponId, currentStatus) => {
     try {

@@ -4,107 +4,84 @@ import '../styles/Nosotros.css';
 const Nosotros = () => {
   return (
     <div className="nosotros-container">
-      {/* Sección Hero */}
-      <div className="hero-section">
+      {/* Hero Intro */}
+      <div className="hero-section compact">
         <h1>Conócenos</h1>
         <p>
-          En MANGARI, nos dedicamos a crear piezas únicas que combinan la belleza de la naturaleza con el diseño moderno.
+          Mangari es una empresa michoacana dedicada a la creación de joyería y accesorios artesanales
+          elaborados con piedras y cuarzos naturales.
         </p>
       </div>
 
-      {/* Sección de Historia */}
-      <div className="historia-section">
+      {/* Historia */}
+      <div className="historia-section compact">
         <div className="historia-content">
           <h2>Nuestra Historia</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel justo nec nisi tincidunt tincidunt.
-            Vivamus lacinia, nisi eget aliquet tincidunt, nisl nisi aliquet nisi, nec tincidunt nisl nisi nec nisi.
+            Mangari nace del amor por las piedras, la energía de la naturaleza y el diseño con intención.
+            Inspirados por el poder simbólico de los cuarzos, decidimos crear piezas que embellecen,
+            acompañan y protegen a quienes las llevan.
           </p>
           <p>
-            Integer nec turpis eget nisi tincidunt tincidunt. Nulla vel justo nec nisi tincidunt tincidunt. Vivamus
-            lacinia, nisi eget aliquet tincidunt, nisl nisi aliquet nisi, nec tincidunt nisl nisi nec nisi.
+            Cada creación representa una armonía entre la naturaleza y el ser humano, una conexión
+            emocional y estética que trasciende la moda.
           </p>
         </div>
         <div className="historia-imagen">
-          <img
-            src="https://via.placeholder.com/400x300" // Reemplaza con una imagen real
-            alt="Nuestra Historia"
-          />
+          
         </div>
       </div>
 
-      {/* Sección de Misión y Visión */}
-      <div className="mision-vision-section">
+      {/* Misión y Visión */}
+      <div className="mision-vision-section compact">
         <div className="mision">
           <h2>Misión</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel justo nec nisi tincidunt tincidunt.
-            Vivamus lacinia, nisi eget aliquet tincidunt, nisl nisi aliquet nisi, nec tincidunt nisl nisi nec nisi.
+            Diseñar joyería artesanal con propósito, seleccionando materiales naturales y fusionando
+            tradición con estilo contemporáneo para crear accesorios que conecten con el alma.
           </p>
         </div>
         <div className="vision">
           <h2>Visión</h2>
           <p>
-            Integer nec turpis eget nisi tincidunt tincidunt. Nulla vel justo nec nisi tincidunt tincidunt. Vivamus
-            lacinia, nisi eget aliquet tincidunt, nisl nisi aliquet nisi, nec tincidunt nisl nisi nec nisi.
+            Ser una marca referente de armonía y significado, creando piezas que inspiren, protejan y
+            acompañen la historia de cada persona.
           </p>
         </div>
       </div>
 
-      {/* Sección de Valores */}
-      <div className="valores-section">
+      {/* Valores */}
+      <div className="valores-section compact">
         <h2>Nuestros Valores</h2>
         <div className="valores-grid">
           <div className="valor-card">
-            <h3>Calidad</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel justo nec nisi tincidunt tincidunt.
-            </p>
+            <h3>Pasión</h3>
+            <p>Creamos con el corazón, guiados por la emoción que nos une con cada piedra.</p>
+          </div>
+          <div className="valor-card">
+            <h3>Artesanía</h3>
+            <p>Honramos el trabajo manual y la dedicación en cada detalle de nuestras piezas.</p>
           </div>
           <div className="valor-card">
             <h3>Sostenibilidad</h3>
-            <p>
-              Integer nec turpis eget nisi tincidunt tincidunt. Nulla vel justo nec nisi tincidunt tincidunt.
-            </p>
+            <p>Elegimos conscientemente materiales y procesos que respetan nuestro entorno.</p>
           </div>
           <div className="valor-card">
-            <h3>Innovación</h3>
-            <p>
-              Vivamus lacinia, nisi eget aliquet tincidunt, nisl nisi aliquet nisi, nec tincidunt nisl nisi nec nisi.
-            </p>
+            <h3>Significado</h3>
+            <p>Cada diseño refleja intención, energía y una historia única por contar.</p>
           </div>
         </div>
       </div>
 
-      {/* Sección de Equipo */}
-      <div className="equipo-section">
-        <h2>Nuestro Equipo</h2>
-        <div className="equipo-grid">
-          <div className="miembro-equipo">
-            <img
-              src="https://via.placeholder.com/150" // Reemplaza con una imagen real
-              alt="Miembro del Equipo"
-            />
-            <h3>Nombre del Miembro</h3>
-            <p>Cargo</p>
-          </div>
-          <div className="miembro-equipo">
-            <img
-              src="https://via.placeholder.com/150" // Reemplaza con una imagen real
-              alt="Miembro del Equipo"
-            />
-            <h3>Nombre del Miembro</h3>
-            <p>Cargo</p>
-          </div>
-          <div className="miembro-equipo">
-            <img
-              src="https://via.placeholder.com/150" // Reemplaza con una imagen real
-              alt="Miembro del Equipo"
-            />
-            <h3>Nombre del Miembro</h3>
-            <p>Cargo</p>
-          </div>
-        </div>
+     
+
+      {/* Cierre emocional */}
+      <div className="hero-section compact" style={{ backgroundColor: '#BEAEA0', color: '#fff' }}>
+        <h2>Más que joyería, una conexión</h2>
+        <p>
+          En Mangari encontrarás piezas que reflejan tu esencia, pensadas para acompañarte y regalar con
+          alma. Diseñamos armonía natural hecha con el corazón.
+        </p>
       </div>
     </div>
   );

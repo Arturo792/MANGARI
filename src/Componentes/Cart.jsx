@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import logoMercado from '../img/mercadopago-icon.png.png';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, query, where, arrayUnion  } from 'firebase/firestore';
 import { db } from '../firebase';
 import '../styles/Cart.modules.css';
 import CardPaymentForm from './CardPaymentForm';
@@ -139,59 +139,89 @@ const Cart = ({ cartItems, setCartItems, removeFromCart, updateQuantity, user })
     }
   };
 
-
   const handleApplyCoupon = useCallback(async (codeInput) => {
   const code = (codeInput || coupon.code).toUpperCase().trim();
 
   try {
-    const docRef = doc(db, 'coupons', 'active');
-    const docSnap = await getDoc(docRef);
+    const q = query(collection(db, 'coupons'), where('code', '==', code));
+    const querySnapshot = await getDocs(q);
 
-    if (!docSnap.exists()) {
+    if (querySnapshot.empty) {
       setCoupon({
         code,
         discount: 0,
-        message: 'No hay cupones activos disponibles.',
+        message: 'Cupón no válido o no existe.',
         applied: false,
       });
       return false;
     }
 
-    const data = docSnap.data();
-    const activeCode = data.code?.toUpperCase().trim();
+    const couponDoc = querySnapshot.docs[0];
+    const couponData = couponDoc.data();
+    const now = new Date();
+    const expiration = new Date(couponData.expirationDate?.seconds * 1000);
 
-    if (code === activeCode) {
-      const discountDecimal = data.discount / 100;
-
-      setCoupon({
-        code,
-        discount: discountDecimal,
-        message: `¡Cupón aplicado! ${data.discount}% de descuento`,
-        applied: true,
-      });
-
-      return true;
-    } else {
+    if (!couponData.isActive || expiration < now) {
       setCoupon({
         code,
         discount: 0,
-        message: 'Cupón no válido',
+        message: 'Este cupón ya no está activo o ha expirado.',
         applied: false,
       });
-
       return false;
     }
+
+    // 🚫 Verificar si ya lo usó este usuario
+    const userId = user?.email || user?.uid;
+    if (!userId) {
+      setCoupon({
+        code,
+        discount: 0,
+        message: 'Debes iniciar sesión para aplicar un cupón.',
+        applied: false,
+      });
+      return false;
+    }
+
+    if (couponData.usedBy?.includes(userId)) {
+      setCoupon({
+        code,
+        discount: 0,
+        message: 'Ya has usado este cupón.',
+        applied: false,
+      });
+      return false;
+    }
+
+    // ✅ Aplicar y guardar que lo usó
+    const discountDecimal = couponData.discount / 100;
+
+    await updateDoc(couponDoc.ref, {
+      usedBy: arrayUnion(userId),
+    });
+
+    setCoupon({
+      code,
+      discount: discountDecimal,
+      message: `¡Cupón aplicado! ${couponData.discount}% de descuento`,
+      applied: true,
+    });
+
+    return true;
+
   } catch (error) {
     console.error('Error al verificar el cupón:', error);
     setCoupon({
       code,
       discount: 0,
-      message: 'Hubo un error al aplicar el cupón. Intenta de nuevo.',
+      message: 'Error al verificar el cupón.',
       applied: false,
     });
     return false;
   }
-}, [coupon.code, setCoupon]);
+}, [coupon.code, user]);
+
+
 
 
 
