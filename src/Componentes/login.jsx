@@ -27,20 +27,7 @@ const Login = () => {
     return () => unsubscribe();
   }, []);
 
-  // Cerrar sesión al recargar la página
-  useEffect(() => {
-    const handleBeforeUnload = async () => {
-      await signOut(auth); // Cierra la sesión al recargar
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
-  // Función para manejar el inicio de sesión
+  // Función para manejar el inicio de sesión (con auto-refresh)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -52,16 +39,22 @@ const Login = () => {
       console.log("Usuario autenticado:", user.email);
 
       // 2. Verificar si el usuario es un administrador
-      const adminDoc = await getDoc(doc(db, "admins", user.email)); // Busca el documento en la colección "admins"
-      console.log("Documento de administrador:", adminDoc.data()); // Depuración
+      const adminDoc = await getDoc(doc(db, "admins", user.email));
+      console.log("Documento de administrador:", adminDoc.data());
 
       if (adminDoc.exists()) {
         console.log("El usuario es un administrador. Redirigiendo a /admin");
-        navigate('/admin'); // Redirige al panel de administrador
+        navigate('/admin');
       } else {
         console.log("El usuario no es un administrador. Redirigiendo a /home");
-        navigate('/home'); // Redirige a la página principal
+        navigate('/home');
       }
+      
+      // Refrescar la página después de 500ms (medio segundo)
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      
     } catch (error) {
       // Manejo de errores
       switch (error.code) {
@@ -81,7 +74,6 @@ const Login = () => {
     }
   };
 
-  // Si la aplicación está cargando, mostrar un mensaje de carga
   if (loading) {
     return (
       <div className="login-container">
@@ -90,14 +82,13 @@ const Login = () => {
     );
   }
 
-
   if (user) {
     return (
       <div className="login-container">
         <h2>Ya has iniciado sesión</h2>
         <p>Bienvenido, {user.email}</p>
         <button
-          onClick={() => navigate('/edit-profile')} // Redirige a /edit-profile
+          onClick={() => navigate('/edit-profile')}
           className="submit-button"
           style={{ backgroundColor: '#BEAEA0', color: '#212121', marginBottom: '10px' }}
         >
@@ -114,7 +105,6 @@ const Login = () => {
     );
   }
 
-  // Si el usuario no está autenticado, mostrar el formulario de inicio de sesión
   return (
     <div className="login-container">
       <button className="close-button" onClick={() => navigate('/')}>
@@ -146,7 +136,7 @@ const Login = () => {
 
         {error && <p className="error-message">{error}</p>}
         <button type="submit" className="submit-button" style={{ backgroundColor: '#BEAEA0', color: '#212121' }}>
-        INICIAR SESIÓN
+          INICIAR SESIÓN
         </button>
       </form>
 

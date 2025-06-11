@@ -158,7 +158,7 @@ const Home = () => {
     </div>
   </div>
 </section>
-br
+
 
       {/* Featured Products */}
       <section className="featured-section">
