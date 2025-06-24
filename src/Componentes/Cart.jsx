@@ -356,48 +356,52 @@ const handleRealMercadoPagoPayment = async () => {
     const orderId = await saveOrderToFirebase('MercadoPago');
     
     // 6. Crear preferencia de pago en MercadoPago
-    const response = await fetch(`${API_URL}/create-preference`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user?.accessToken || ''}` // Si tu API requiere autenticación
-      },
-      body: JSON.stringify({
-        items: validItems,
-        payer: {
-          name: customerData.name,
-          email: customerData.email,
-          phone: {
-            area_code: '', // Puedes extraer esto del teléfono si es necesario
-            number: customerData.phone
-          },
-          address: address
-        },
-        shipments: {
-          cost: shippingCost,
-          free_shipping: shippingCost === 0,
-          receiver_address: address
-        },
-        metadata: { 
-          orderId: orderId,
-          userId: user?.uid || 'guest',
-          coupon: coupon.code || 'none',
-          discount: coupon.discount * 100, // Enviar como porcentaje
-          subtotal: subtotal.toFixed(2),
-          total: total.toFixed(2)
-        },
-        back_urls: {
-          success: `${FRONT_END}/pago-exitoso?orderId=${orderId}`,
-          failure: `${FRONT_END}/cart?error=payment_failed`,
-          pending: `${FRONT_END}/cart?status=pending`
-        },
-        auto_return: 'approved',
-        notification_url: `${API_URL}/mercadopago/webhook`,
-        external_reference: orderId,
-        statement_descriptor: 'TIENDA_ONLINE'
-      })
-    });
+      const API_BASE = "https://mangari.mx";
+      const ENDPOINT = "/create-preference";
+      const response = await fetch(`${API_BASE}${ENDPOINT}`, {
 
+
+
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.accessToken || ''}` // Si tu API requiere autenticación
+        },
+        body: JSON.stringify({
+          items: validItems,
+          payer: {
+            name: customerData.name,
+            email: customerData.email,
+            phone: {
+              area_code: '', // Puedes extraer esto del teléfono si es necesario
+              number: customerData.phone
+            },
+            address: address
+          },
+          shipments: {
+            cost: shippingCost,
+            free_shipping: shippingCost === 0,
+            receiver_address: address
+          },
+          metadata: { 
+            orderId: orderId,
+            userId: user?.uid || 'guest',
+            coupon: coupon.code || 'none',
+            discount: coupon.discount * 100, // Enviar como porcentaje
+            subtotal: subtotal.toFixed(2),
+            total: total.toFixed(2)
+          },
+          back_urls: {
+            success: `${FRONT_END}/pago-exitoso?orderId=${orderId}`,
+            failure: `${FRONT_END}/cart?error=payment_failed`,
+            pending: `${FRONT_END}/cart?status=pending`
+          },
+          auto_return: 'approved',
+          notification_url: `${API_URL}/mercadopago/webhook`,
+          external_reference: orderId,
+          statement_descriptor: 'TIENDA_ONLINE'
+        })
+      });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || 'Error al crear el pago');
@@ -415,6 +419,9 @@ const handleRealMercadoPagoPayment = async () => {
 };
 
   
+
+
+
 
   const handleRealCardPayment = async (cardData) => {
     if (!validateForm()) {

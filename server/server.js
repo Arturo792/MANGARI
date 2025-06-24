@@ -11,24 +11,33 @@ const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 const MP_API_URL = 'https://api.mercadopago.com';
 
 const allowedOrigins = [
-  FRONTEND_URL, // http://localhost:3000
-  'http://localhost:3000' // la URL que te da ngrok
+  'https://mangari.mx', // Tu dominio principal
+  'https://www.mangari.mx', // Versión con www
+  'http://localhost:3000', // Desarrollo local
+  'https://localhost:3000' // Por si usas HTTPS local
 ];
-// Middlewares
+
 app.use(cors({
   origin: function(origin, callback) {
-    // Permite peticiones sin origen (Postman, curl, etc)
+    console.log('Solicitud CORS desde origen:', origin);
     if (!origin) return callback(null, true);
-
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = `El CORS no está permitido para el origen: ${origin}`;
       return callback(new Error(msg), false);
     }
     return callback(null, true);
-  }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
 }));
 
+app.options('*', cors());
+
+
+
 app.use(express.json());
+const router = express.Router();
+app.use('/api', router);
 
 // Validación de items
 const validateItems = (items) => {
@@ -63,7 +72,7 @@ const getMPHeaders = () => ({
 });
 
 // Ruta para crear preferencia de MercadoPago (redirección)
-app.post('/create-preference', async (req, res) => {
+router.post('/create-preference', async (req, res) => {
   try {
     const { items, payer, metadata, back_urls } = req.body;
 
@@ -85,30 +94,30 @@ app.post('/create-preference', async (req, res) => {
       })),
       payer: {
         name: payer.name,
-        surname: payer.surname || '', // MP requiere surname
+        surname: payer.surname || '',
         email: payer.email,
         phone: {
-          area_code: '', // Extraer de phone.number si es posible
+          area_code: '',
           number: payer.phone.number
         },
         address: {
           zip_code: payer.address.zip_code,
           street_name: payer.address.street_name,
-          street_number: 'N/A' // MP requiere street_number
+          street_number: 'N/A'
         }
       },
-      back_urls: req.body.back_urls || {
+      back_urls: back_urls || {
         success: `${FRONTEND_URL}/pago-exitoso`,
         failure: `${FRONTEND_URL}/pago-fallido`,
         pending: `${FRONTEND_URL}/pago-pendiente`
       },
       auto_return: 'approved',
       payment_methods: {
-        excluded_payment_types: [{ id: 'atm' }], // Opcional: excluir métodos
-        installments: 12 // Máximo de cuotas
+        excluded_payment_types: [{ id: 'atm' }],
+        installments: 12
       },
       metadata: metadata || {},
-      notification_url: process.env.MP_NOTIFICATION_URL // Para webhooks
+      notification_url: `${FRONTEND_URL}/api/webhook`  // Asegúrate que coincida
     };
 
     const response = await axios.post(
@@ -119,8 +128,7 @@ app.post('/create-preference', async (req, res) => {
 
     res.json({
       id: response.data.id,
-      init_point: response.data.init_point,
-      sandbox_init_point: response.data.sandbox_init_point // Para desarrollo
+      init_point: response.data.init_point
     });
 
   } catch (error) {

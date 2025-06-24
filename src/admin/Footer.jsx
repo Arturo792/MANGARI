@@ -26,7 +26,7 @@ const Footer = () => {
           <p>
             <FaEnvelope className="icon" /> mangari.joy@gmail.com
           </p>
-          <p>Teléfono: +52 443-2647360</p> 
+          <p>Teléfono: +52 443-363-0406</p> 
         </div>
 
         {/* Derechos de autor */}
