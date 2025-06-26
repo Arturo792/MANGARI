@@ -32,7 +32,7 @@ const Footer = () => {
         {/* Derechos de autor */}
         <div className="copyright">
           <p>© {new Date().getFullYear()} MANGARI. Todos los derechos reservados.</p>
-          <p>Diseñado y desarollado por ISC. Luis Arturo Aguilar Guzmán.</p>
+          <p>Diseñado y desarrollado por ISC. Luis Arturo Aguilar Guzmán.</p>
         </div>
       </div>
     </footer>

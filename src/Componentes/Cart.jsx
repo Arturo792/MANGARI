@@ -356,16 +356,16 @@ const handleRealMercadoPagoPayment = async () => {
     const orderId = await saveOrderToFirebase('MercadoPago');
     
     // 6. Crear preferencia de pago en MercadoPago
-      const API_BASE = "https://mangari.mx";
-      const ENDPOINT = "/create-preference";
-      const response = await fetch(`${API_BASE}${ENDPOINT}`, {
+      const API_BASE = process.env.REACT_APP_API_URL; // <- Ojo: ahora incluye /api
+      //const ENDPOINT = "/create-preference";
+      const response = await fetch(`${API_BASE}/create-preference`, {
 
 
 
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user?.accessToken || ''}` // Si tu API requiere autenticación
+          //'Authorization': `Bearer ${user?.accessToken || ''}` // Si tu API requiere autenticación
         },
         body: JSON.stringify({
           items: validItems,
@@ -402,13 +402,24 @@ const handleRealMercadoPagoPayment = async () => {
           statement_descriptor: 'TIENDA_ONLINE'
         })
       });
+
+
+      
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al crear el pago');
+  const contentType = response.headers.get('Content-Type');
+  if (contentType && contentType.includes('application/json')) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Error al crear el pago');
+  } else {
+    const errorText = await response.text(); // ⛔ Aquí verás si es HTML
+    console.error("Respuesta inesperada:", errorText);
+    throw new Error('El servidor respondió con un formato inesperado (HTML). Verifica la URL o el backend.');
+    }
     }
 
     const data = await response.json();
-    window.location.href = data.sandbox_init_point || data.init_point;
+    console.log("respuesta de MercadoPago", data);
+    window.location.href = data.init_point;
 
   } catch (error) {
     console.error('Error en el proceso de pago:', error);
